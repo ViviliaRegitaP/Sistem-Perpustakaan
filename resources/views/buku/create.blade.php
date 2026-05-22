@@ -66,6 +66,23 @@
                                 @enderror
                             </div>
 
+                            <div class="col-md-12">
+                                <label class="form-label">Kategori</label>
+                                <select name="kategori" class="form-select @error('kategori') is-invalid @enderror" required>
+                                    <option value="" disabled {{ old('kategori') ? '' : 'selected' }}>Pilih kategori</option>
+                                    @isset($categories)
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id_kategori }}" {{ (string) old('kategori') === (string) $category->id_kategori ? 'selected' : '' }}>
+                                                {{ $category->nama_kategori }}
+                                            </option>
+                                        @endforeach
+                                    @endisset
+                                </select>
+                                @error('kategori')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-md-6 d-flex align-items-end justify-content-md-end">
                                 <div class="d-grid d-md-flex gap-2">
                                     <a href="{{ route('bukus.index') }}" class="btn" style="background: rgba(44,52,27,.10); color: var(--text); border:1px solid rgba(44,52,27,.12); font-weight:800;">

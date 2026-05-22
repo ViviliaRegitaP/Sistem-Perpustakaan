@@ -15,6 +15,7 @@ class Buku extends Model
         'penerbit',
         'tahun_terbit',
         'stok',
+        'kategori_id',
     ];
 
     protected $casts = [

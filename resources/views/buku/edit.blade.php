@@ -67,6 +67,22 @@
                                 @enderror
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label" for="kategori">Kategori</label>
+                                <select name="kategori" id="kategori" class="form-select @error('kategori') is-invalid @enderror">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @foreach($categories as $category)
+                                        {{-- Menggunakan $category->getKey() agar Laravel otomatis mencari Primary Key tabel Kategori --}}
+                                        <option value="{{ $category->getKey() }}" {{ old('kategori', $buku->kategori_id ?? $buku->kategori) == $category->getKey() ? 'selected' : '' }}>
+                                            {{ $category->nama_kategori ?? $category->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('kategori')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-md-6 d-flex align-items-end justify-content-md-end">
                                 <div class="d-grid d-md-flex gap-2">
                                     <a href="{{ route('bukus.index') }}" class="btn" style="background: rgba(44,52,27,.10); color: var(--text); border:1px solid rgba(44,52,27,.12); font-weight:800;">

@@ -2,12 +2,65 @@
 
 @section('content')
 
+<style>
+
+    /* TITLE */
+    .login-title{
+        text-align:center;
+        margin-bottom:10px;
+    }
+
+    .login-subtitle{
+        text-align:center;
+        margin-bottom:32px;
+    }
+
+    /* REGISTER TEXT */
+    .register-text{
+        text-align:center;
+        margin-top:24px;
+        font-size:15px;
+        color:#7A6A61;
+        font-weight:500;
+    }
+
+    .register-text a{
+        color:#7C4F38;
+        text-decoration:none;
+        font-weight:700;
+        transition:.3s ease;
+        position:relative;
+    }
+
+    .register-text a:hover{
+        color:#5E3928;
+    }
+
+    .register-text a::after{
+        content:'';
+        position:absolute;
+        left:0;
+        bottom:-3px;
+        width:100%;
+        height:2px;
+        background:#7C4F38;
+        border-radius:10px;
+        transform:scaleX(0);
+        transition:.3s ease;
+    }
+
+    .register-text a:hover::after{
+        transform:scaleX(1);
+    }
+
+</style>
+
 <h1 class="login-title">
-    Masuk
+    Selamat datang
 </h1>
 
 <p class="login-subtitle">
-    Login untuk masuk ke dashboard
+    Masuk untuk mengakses Lentera Pustaka
 </p>
 
 <form method="POST" action="{{ route('login') }}">
@@ -132,7 +185,7 @@
             Belum punya akun?
 
             <a href="{{ route('register') }}">
-                Daftar
+                Daftar Sekarang
             </a>
 
         </div>

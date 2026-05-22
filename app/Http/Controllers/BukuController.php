@@ -21,9 +21,11 @@ class BukuController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('buku.create');
-    }
+        {
+        $categories = Kategori::all();
+        
+        return view('buku.create', compact('categories'));
+        }
 
     /**
      * Store a newly created resource in storage.
@@ -37,6 +39,7 @@ class BukuController extends Controller
             'penerbit' => 'required',
             'tahun_terbit' => 'required',
             'stok' => 'required',
+            'kategori' => 'required',   
         ]);
 
         Buku::create($validated);
@@ -58,13 +61,13 @@ class BukuController extends Controller
      */
     public function edit(Buku $buku)
     {
-        return view('buku.edit', compact('buku'));
+        $categories = Kategori::all(); 
+        return view('buku.edit', compact('buku', 'categories'));
     }
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Buku $buku)
+     public function update(Request $request, Buku $buku)
     {
         $validated = $request->validate([
             'kode_buku' => 'required',
@@ -73,6 +76,7 @@ class BukuController extends Controller
             'penerbit' => 'required',
             'tahun_terbit' => 'required',
             'stok' => 'required',
+            'kategori' => 'required',
         ]);
 
         $buku->update($validated);

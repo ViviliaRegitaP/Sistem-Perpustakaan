@@ -1,6 +1,10 @@
+{{-- resources/views/layouts/guest.blade.php --}}
+
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,385 +14,417 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
 
-        :root{
-            --dark:#243020;
-            --primary:#6F8F6B;
-            --secondary:#97AC82;
-            --bg:#F4F6F1;
-            --white:#ffffff;
-        }
+        :root {
+            --bg: #F5F1EB;
+            --white: #FFFFFF;
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
+            --primary: #7C4F38;
+            --primary-dark: #5E3928;
 
-        body{
-            font-family:Inter,sans-serif;
-            background:var(--bg);
-            min-height:100vh;
-            overflow:hidden;
-        }
+            --accent: #D9A066;
+            --accent-soft: #F1D4B3;
 
-        .login-wrapper{
-            width:100%;
-            min-height:100vh;
-            display:flex;
-        }
+            --text: #2A211C;
+            --soft: #7A6A61;
 
-        /* LEFT SIDE */
+            --border: #E8DED5;
 
-        .login-left{
+            --card: rgba(255,255,255,.82);
 
-            width:43%;
-
-            position:relative;
-
-            background:
-            linear-gradient(
-                160deg,
-                #243020,
-                #6F8F6B
-            );
-
-            overflow:hidden;
-
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-
-            padding:60px;
-
-            border-top-right-radius:100px;
-            border-bottom-right-radius:100px;
-
-            margin-right:-60px;
-
-            z-index:2;
-        }
-
-        .login-left::before{
-            content:'';
-
-            position:absolute;
-
-            width:320px;
-            height:320px;
-
-            border-radius:50%;
-
-            background:
-            rgba(255,255,255,.08);
-
-            top:-120px;
-            right:-100px;
-        }
-
-        .login-left::after{
-            content:'';
-
-            position:absolute;
-
-            width:220px;
-            height:220px;
-
-            border-radius:50%;
-
-            background:
-            rgba(255,255,255,.08);
-
-            bottom:-70px;
-            left:-70px;
-        }
-
-        .brand-icon{
-
-            width:78px;
-            height:78px;
-
-            border-radius:24px;
-
-            background:
-            rgba(255,255,255,.12);
-
-            display:flex;
-            align-items:center;
-            justify-content:center;
-
-            color:white;
-
-            font-size:36px;
-
-            margin-bottom:28px;
-
-            backdrop-filter:blur(10px);
-        }
-
-        .brand-title{
-
-            color:white;
-
-            font-size:56px;
-            font-weight:800;
-
-            line-height:1.08;
-
-            margin-bottom:22px;
-        }
-
-        .brand-desc{
-
-            color:
-            rgba(255,255,255,.88);
-
-            font-size:18px;
-
-            line-height:1.8;
-
-            max-width:420px;
-        }
-
-        /* RIGHT SIDE */
-
-        .login-right{
-
-            width:57%;
-
-            position:relative;
-
-            z-index:1;
-
-            background:var(--bg);
-
-            display:flex;
-            align-items:center;
-            justify-content:center;
-
-            padding:40px 50px;
-        }
-
-        .login-box{
-
-            width:100%;
-            max-width:500px;
-        }
-
-        .login-title{
-
-            font-size:42px;
-            font-weight:800;
-
-            color:var(--dark);
-
-            margin-bottom:8px;
-        }
-
-        .login-subtitle{
-
-            font-size:16px;
-
-            color:#61705D;
-
-            margin-bottom:30px;
-        }
-
-        .form-label{
-
-            font-size:16px;
-
-            font-weight:700;
-
-            color:var(--dark);
-
-            margin-bottom:10px;
-        }
-
-        .input-group-custom{
-
-            position:relative;
-
-            margin-bottom:22px;
-        }
-
-        .input-group-custom i{
-
-            position:absolute;
-
-            left:22px;
-            top:50%;
-
-            transform:translateY(-50%);
-
-            color:#7B8876;
-
-            font-size:17px;
-        }
-
-        .form-control{
-
-            height:58px;
-
-            border-radius:18px;
-
-            border:2px solid #B7C4AE;
-
-            padding-left:62px;
-
-            font-size:16px;
-
-            background:white;
-        }
-
-        .form-control:focus{
-
-            box-shadow:none;
-
-            border-color:var(--primary);
-        }
-
-        .remember-wrap{
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-
-            margin-bottom:24px;
-        }
-
-        .form-check-label{
-
-            font-size:15px;
-        }
-
-        .forgot-link{
-
-            text-decoration:none;
-
-            color:var(--primary);
-
-            font-weight:700;
-
-            font-size:15px;
-        }
-
-        .btn-login{
-
-            width:100%;
-
-            height:56px;
-
-            border:none;
-
-            border-radius:18px;
-
-            background:
-            linear-gradient(
+            --gradient-1: linear-gradient(
                 135deg,
-                #243020,
-                #6F8F6B
+                #7C4F38 0%,
+                #B17457 100%
             );
 
-            color:white;
+            --gradient-2: linear-gradient(
+                135deg,
+                #D9A066 0%,
+                #F3C98B 100%
+            );
+        }
 
-            font-size:18px;
-            font-weight:700;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            transition:.25s ease;
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(circle at top left,
+                rgba(217,160,102,.12),
+                transparent 35%),
+
+                radial-gradient(circle at bottom right,
+                rgba(124,79,56,.10),
+                transparent 35%),
+
+                var(--bg);
+
+            font-family: 'Inter', sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(124,79,56,.08);
+            top: -220px;
+            left: -180px;
+            filter: blur(100px);
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(217,160,102,.10);
+            bottom: -200px;
+            right: -160px;
+            filter: blur(100px);
+
+            pointer-events: none;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1180px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 480px;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .left-side {
+            padding-right: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mini-line {
+            width: 70px;
+            height: 3px;
+            border-radius: 50px;
+            background: var(--gradient-2);
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 82px;
+            line-height: .95;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 28px;
+            letter-spacing: -1px;
+        }
+
+        .brand span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .desc {
+            max-width: 480px;
+            color: var(--soft);
+            font-size: 16px;
+            line-height: 2;
+            margin-bottom: 36px;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, .75);
+            border: 1px solid rgba(255,255,255,.8);
+            backdrop-filter: blur(14px);
+
+            border-radius: 18px;
+            padding: 16px 18px;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            transition: .35s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 14px 28px rgba(0,0,0,.06);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #F5E2D0,
+                    #F1D4B3
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+        }
+
+        .stat-icon i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--soft);
+            margin-top: 4px;
+        }
+
+        .login-card {
+            background: var(--card);
+
+            border: 1px solid rgba(255,255,255,.9);
+
+            backdrop-filter: blur(24px);
+
+            border-radius: 34px;
+
+            padding: 55px;
 
             box-shadow:
-            0 10px 24px rgba(111,143,107,.20);
+                0 20px 60px rgba(0,0,0,.06);
+
+            position: relative;
+            z-index: 10;
         }
 
-        .btn-login:hover{
-
-            transform:
-            translateY(-2px);
-
-            background:
-            linear-gradient(
-                135deg,
-                #1D271A,
-                #5F7F5B
-            );
+        .login-content{
+            position: relative;
+            z-index: 20;
         }
 
-        .register-text{
-
-            text-align:center;
-
-            margin-top:20px;
-
-            font-size:16px;
-
-            color:#677261;
+        .login-content a{
+            position: relative;
+            z-index: 30;
         }
 
-        .register-text a{
-
-            color:var(--primary);
-
-            text-decoration:none;
-
-            font-weight:700;
+        .login-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 54px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
         }
 
-        .copyright{
-
-            margin-top:18px;
-
-            text-align:center;
-
-            color:#7A8575;
-
-            font-size:14px;
+        .login-subtitle {
+            color: var(--soft);
+            font-size: 15px;
+            margin-bottom: 38px;
         }
 
-        @media(max-width:991px){
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
 
-            body{
-                overflow:auto;
+        .input-group-custom {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-group-custom i {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: #9B9B9B;
+            font-size: 15px;
+            z-index: 5;
+        }
+
+        .form-control {
+            height: 60px;
+
+            border-radius: 18px;
+
+            border: 1px solid var(--border);
+
+            background: rgba(255,255,255,.8);
+
+            padding-left: 52px;
+
+            font-size: 15px;
+
+            transition: .3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(124,79,56,.10),
+                0 8px 20px rgba(124,79,56,.08);
+        }
+
+        .remember-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .form-check-label {
+            color: var(--soft);
+            font-size: 14px;
+        }
+
+        .form-check-input:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .forgot-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 60px;
+
+            border: none;
+            border-radius: 18px;
+
+            background: var(--gradient-1);
+
+            color: white;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            transition: .35s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px) scale(1.01);
+
+            box-shadow:
+                0 14px 30px rgba(124,79,56,.25);
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 28px;
+            color: var(--soft);
+            font-size: 14px;
+        }
+
+        .register a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 28px;
+            color: #9C9088;
+            font-size: 13px;
+        }
+
+        @media (max-width: 991px) {
+
+            body {
+                padding: 28px;
+                overflow-y: auto;
             }
 
-            .login-wrapper{
-                flex-direction:column;
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
             }
 
-            .login-left,
-            .login-right{
-                width:100%;
+            .left-side {
+                padding-right: 0;
             }
 
-            .login-left{
-
-                min-height:280px;
-
-                padding:40px 30px;
-
-                border-radius:
-                0 0 50px 50px;
-
-                margin-right:0;
+            .brand {
+                font-size: 62px;
             }
 
-            .brand-title{
-                font-size:42px;
+            .login-card {
+                padding: 40px 30px;
             }
 
-            .brand-desc{
-                font-size:16px;
+        }
+
+        @media (max-width: 576px) {
+
+            .brand {
+                font-size: 50px;
             }
 
-            .login-right{
-                padding:35px 24px;
+            .login-title {
+                font-size: 42px;
             }
 
-            .login-title{
-                font-size:36px;
+            .login-card {
+                border-radius: 28px;
             }
 
         }
@@ -399,43 +435,100 @@
 
 <body>
 
-<div class="login-wrapper">
+    <div class="login-wrapper">
 
-    {{-- LEFT --}}
-    <div class="login-left">
+        <div class="login-container">
 
-        <div class="brand-icon">
-            <i class="bi bi-book-half"></i>
-        </div>
+            <div class="left-side">
 
-        <h1 class="brand-title">
-            Lentera<br>
-            Pustaka
-        </h1>
+                <div class="mini-line"></div>
 
-        <p class="brand-desc">
-            Sistem perpustakaan modern untuk mengelola
-            data buku dengan cepat, rapi, dan profesional.
-        </p>
+                <h1 class="brand">
+                    Lentera<br>
+                    <span>Pustaka</span>
+                </h1>
 
-    </div>
+                <p class="desc">
+                    Sistem perpustakaan yang dirancang untuk
+                    pengelolaan koleksi buku dengan lebih efisien
+                </p>
 
-    {{-- RIGHT --}}
-    <div class="login-right">
+                <div class="stats-grid">
 
-        <div class="login-box">
+                    <div class="stat-item">
 
-            @yield('content')
+                        <div class="stat-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
 
-            <div class="copyright">
-                © {{ date('Y') }} Lentera Pustaka
+                        <div>
+                            <div class="stat-num">
+                                {{ $totalBuku ?? '1.200 +' }}
+                            </div>
+
+                            <div class="stat-label">
+                                Koleksi buku tersedia
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="stat-item">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-num">
+                                {{ $totalAnggota ?? '230' }}
+                            </div>
+
+                            <div class="stat-label">
+                                Anggota aktif terdaftar
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="stat-item">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-num">
+                                {{ $totalPeminjaman ?? '165' }}
+                            </div>
+
+                            <div class="stat-label">
+                                Peminjaman bulan ini
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="login-card">
+
+                <div class="login-content">
+                    @yield('content')
+                </div>
+
+                <div class="copyright">
+                    © {{ date('Y') }} Lentera Pustaka
+                </div>
+
             </div>
 
         </div>
 
     </div>
 
-</div>
-
 </body>
+
 </html>

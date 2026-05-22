@@ -344,9 +344,17 @@
                     Data Buku
                 </a>
 
+             {{-- KATEGORI --}}
+                <a
+                    href="{{ route('kategori.index') }}"
+                    class="{{ request()->is('kategori*') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-tags"></i>
+                    Kategori
+                </a>
+
             {{-- ANGGOTA --}}
             @else
-
                 <a
                     href="/daftar-buku"
                     class="{{ request()->is('daftar-buku') ? 'active' : '' }}"
