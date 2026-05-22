@@ -2,7 +2,8 @@
 
 @section('content')
 
-<div class="card border-0 shadow-sm rounded-5 p-5">
+<div class="card border-0 shadow-sm p-5" style="border-radius:32px;">
+
 
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-5">
@@ -25,7 +26,7 @@
                 width:70px;
                 height:70px;
                 background:#EEF2EA;
-                color:#6F8F6B;
+                color:var(--primary);
                 font-size:28px;
             "
         >
@@ -39,9 +40,10 @@
 
         <table class="table align-middle">
 
-            <thead>
+<thead>
 
-                <tr style="background:#EEF2EA;">
+                <tr style="background:rgba(241,212,179,.38);">
+
 
                     <th class="py-3 border-0">Kode</th>
                     <th class="py-3 border-0">Judul</th>
@@ -85,7 +87,7 @@
                             <span
                                 class="badge rounded-pill px-3 py-2"
                                 style="
-                                    background:#6F8F6B;
+                                    background:rgba(124,79,56,.92);
                                     font-size:14px;
                                 "
                             >

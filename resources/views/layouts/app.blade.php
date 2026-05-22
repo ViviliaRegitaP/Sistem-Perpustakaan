@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
     <title>@yield('title', 'Lentera Pustaka')</title>
 
     {{-- Bootstrap --}}
@@ -18,14 +23,23 @@
     <style>
 
         :root{
-            --bg:#F6F7F2;
+            --bg:#F5F1EB;
             --white:#ffffff;
-            --dark:#243020;
-            --primary:#6F8F6B;
-            --primary-soft:#97AC82;
-            --soft:#EEF2E8;
-            --border:#E5E9E1;
+            --dark:#2A211C;
+            --primary:#7C4F38;
+            --primary-dark:#5E3928;
+            --soft:#7A6A61;
+            --accent:#D9A066;
+            --accent-soft:#F1D4B3;
+            --border:#E8DED5;
+
+            --card: rgba(255,255,255,.82);
+
+            --gradient-btn: linear-gradient(135deg,#7C4F38 0%,#B17457 100%);
+            --gradient-btn-2: linear-gradient(135deg,#D9A066 0%,#F3C98B 100%);
+            --shadow: 0 10px 35px rgba(0,0,0,.04);
         }
+
 
         *{
             margin:0;
@@ -35,31 +49,31 @@
 
         body{
             background:var(--bg);
-            font-family:Inter,sans-serif;
+            font-family:'Inter',sans-serif;
             color:var(--dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+
 
         /* SIDEBAR */
 
-        .sidebar{
-            width:260px;
+.sidebar{
+            width:290px;
             height:100vh;
-
             position:fixed;
             top:0;
             left:0;
-
-            background:white;
-
+            background:rgba(255,255,255,.78);
+            backdrop-filter: blur(14px);
             border-right:1px solid var(--border);
-
-            padding:28px 20px;
-
+            padding:28px 22px;
             display:flex;
             flex-direction:column;
-
             z-index:1000;
+            transition: width .25s ease;
         }
+
 
         /* LOGO */
 
@@ -71,74 +85,60 @@
             margin-bottom:45px;
         }
 
-        .logo-icon{
-            width:58px;
-            height:58px;
-
-            border-radius:18px;
-
-            background:linear-gradient(
-                135deg,
-                #6F8F6B,
-                #97AC82
-            );
-
+.logo-icon{
+            width:60px;
+            height:60px;
+            border-radius:20px;
+            background:var(--gradient-btn);
             display:flex;
             align-items:center;
             justify-content:center;
-
             color:white;
             font-size:24px;
-
             flex-shrink:0;
+            box-shadow: 0 18px 30px rgba(124,79,56,.18);
         }
+
 
         .logo-text{
+            font-family: 'Cormorant Garamond', serif;
             font-size:24px;
-            font-weight:800;
-            line-height:1.2;
+            font-weight:700;
+            line-height:1.05;
 
             color:var(--dark);
+            letter-spacing: -.2px;
         }
+
 
         /* PROFILE */
 
-        .profile-card{
-
+.profile-card{
             display:flex;
             align-items:center;
             gap:12px;
-
             padding:14px;
-
-            border-radius:22px;
-
-            background:var(--soft);
-
+            border-radius:26px;
+            background: rgba(241,212,179,.45);
+            border:1px solid rgba(217,160,102,.25);
             margin-bottom:35px;
-
+            transition: transform .25s ease;
         }
 
-        .profile-icon{
 
-            width:50px;
-            height:50px;
-
-            border-radius:16px;
-
+.profile-icon{
+            width:52px;
+            height:52px;
+            border-radius:18px;
             background:white;
-
             display:flex;
             align-items:center;
             justify-content:center;
-
             color:var(--primary);
-
             font-size:22px;
-
             flex-shrink:0;
-
         }
+
 
         .user-name{
 
@@ -157,48 +157,46 @@
             gap:12px;
         }
 
-        .menu a{
+.menu a{
             text-decoration:none;
-
             height:58px;
-
-            border-radius:18px;
-
+            border-radius:22px;
             padding:0 18px;
-
             display:flex;
             align-items:center;
             gap:14px;
-
-            color:#667164;
-
-            font-weight:600;
-            font-size:16px;
-
-            transition:.2s;
+            color:#6B5A52;
+            font-weight:650;
+            font-size:15.5px;
+            transition: all .25s ease;
+            will-change: transform;
         }
+
 
         .menu a i{
             font-size:20px;
         }
 
-        .menu a:hover{
-            background:var(--soft);
+.menu a:hover{
+            background: rgba(241,212,179,.35);
             color:var(--dark);
+            transform: translateY(-1px);
         }
+
 
         .menu a.active{
-            background:linear-gradient(
-                135deg,
-                #6F8F6B,
-                #97AC82
-            );
-
+            background: var(--gradient-btn);
             color:white;
-
-            box-shadow:
-            0 10px 25px rgba(111,143,107,.25);
+            box-shadow: 0 18px 32px rgba(124,79,56,.22);
         }
+
+        .menu a .bi,
+        .menu a i{
+            color: currentColor;
+            opacity: .95;
+        }
+
+
 
         /* LOGOUT */
 
@@ -206,33 +204,30 @@
             margin-top:auto;
         }
 
-        .logout button{
+.logout button{
             width:100%;
             height:58px;
-
             border:none;
-
-            border-radius:18px;
-
-            background:#F1F4EE;
-
-            color:#667164;
-
-            font-weight:600;
-            font-size:16px;
-
+            border-radius:22px;
+            background: rgba(255,255,255,.9);
+            border:1px solid var(--border);
+            color:#6B5A52;
+            font-weight:650;
+            font-size:15.5px;
             display:flex;
             align-items:center;
             justify-content:center;
             gap:12px;
-
-            transition:.2s;
+            transition: all .25s ease;
             cursor:pointer;
         }
 
-        .logout button:hover{
-            background:#E7ECE3;
+
+.logout button:hover{
+            background: rgba(241,212,179,.35);
+            transform: translateY(-1px);
         }
+
 
         .logout i{
             font-size:20px;
@@ -240,41 +235,36 @@
 
         /* MAIN */
 
-        .main{
-            margin-left:260px;
-            padding:35px;
+.main{
+            margin-left:290px;
+            padding:34px;
         }
 
         .content-card{
-            background:white;
-
-            border-radius:30px;
-
+            background: rgba(255,255,255,.86);
+            backdrop-filter: blur(12px);
+            border-radius:34px;
             min-height:calc(100vh - 70px);
-
-            padding:35px;
-
-            box-shadow:
-            0 10px 35px rgba(0,0,0,.04);
+            padding:34px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(232,222,213,.8);
         }
+
 
         /* RESPONSIVE */
 
         @media(max-width:991px){
-
             .sidebar{
                 width:100%;
                 height:auto;
-
                 position:relative;
             }
-
             .main{
                 margin-left:0;
-                padding:20px;
+                padding:18px;
             }
-
         }
+
 
     </style>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class BukuController extends Controller
@@ -21,11 +22,11 @@ class BukuController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-        {
+    {
         $categories = Kategori::all();
-        
+
         return view('buku.create', compact('categories'));
-        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -37,14 +38,14 @@ class BukuController extends Controller
             'judul' => 'required',
             'penulis' => 'required',
             'penerbit' => 'required',
-            'tahun_terbit' => 'required',
-            'stok' => 'required',
-            'kategori' => 'required',   
+            'tahun_terbit' => 'required|integer|min:1800|max:2100',
+            'stok' => 'required|integer|min:0',
+            'kategori_id' => 'required|exists:kategoris,id',
         ]);
 
         Buku::create($validated);
 
-        return redirect('/bukus')
+        return redirect()->route('bukus.index')
             ->with('success', 'Buku berhasil ditambahkan');
     }
 
@@ -61,27 +62,29 @@ class BukuController extends Controller
      */
     public function edit(Buku $buku)
     {
-        $categories = Kategori::all(); 
+        $categories = Kategori::all();
+
         return view('buku.edit', compact('buku', 'categories'));
     }
+
     /**
      * Update the specified resource in storage.
      */
-     public function update(Request $request, Buku $buku)
+    public function update(Request $request, Buku $buku)
     {
         $validated = $request->validate([
             'kode_buku' => 'required',
             'judul' => 'required',
             'penulis' => 'required',
             'penerbit' => 'required',
-            'tahun_terbit' => 'required',
-            'stok' => 'required',
-            'kategori' => 'required',
+            'tahun_terbit' => 'required|integer|min:1800|max:2100',
+            'stok' => 'required|integer|min:0',
+            'kategori_id' => 'required|exists:kategoris,id',
         ]);
 
         $buku->update($validated);
 
-        return redirect('/bukus')
+        return redirect()->route('bukus.index')
             ->with('success', 'Buku berhasil diupdate');
     }
 
@@ -96,3 +99,4 @@ class BukuController extends Controller
             ->with('success', 'Buku berhasil dihapus');
     }
 }
+

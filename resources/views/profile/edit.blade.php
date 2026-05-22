@@ -12,12 +12,12 @@
                 font-size:34px;
             ">
 
-            Profil Saya
+            Edit Profil
 
         </h2>
 
         <p class="text-muted mb-0 fs-5">
-            Kelola informasi akun kamu.
+            Perbarui informasi akun kamu.
         </p>
 
     </div>
@@ -122,135 +122,104 @@
 </div>
 
 <style>
+    /* Tema Edit Profil - konsisten dengan Login Lentera Pustaka */
 
-.profile-side-card{
+    .profile-side-card,
+    .profile-form-card{
+        background: rgba(247,243,238,.9);
+        border-radius:34px;
+        padding:40px 30px;
+        text-align:center;
+        border:1px solid rgba(165,106,67,.18);
+        box-shadow: 0 10px 28px rgba(0,0,0,.03);
+        backdrop-filter: blur(10px);
+    }
 
-    background:white;
+    .profile-side-card{
+        padding:40px 30px;
+    }
 
-    border-radius:30px;
+    .profile-avatar{
+        width:110px;
+        height:110px;
+        margin:auto;
+        margin-bottom:25px;
+        border-radius:32px;
+        background: linear-gradient(135deg,#A56A43 0%, #C8845A 100%);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#F7F3EE;
+        font-size:46px;
+        box-shadow: 0 18px 32px rgba(165,106,67,.18);
+    }
 
-    padding:40px 30px;
+    .profile-badge{
+        background: rgba(234,220,203,.65);
+        color:#A56A43;
+        padding:12px 18px;
+        border-radius:16px;
+        font-weight:700;
+        display:inline-block;
+        border:1px solid rgba(165,106,67,.18);
+    }
 
-    text-align:center;
+    .profile-form-card{
+        padding:40px;
+        text-align:left;
+    }
 
-    border:1px solid #EEF1EB;
+    .custom-input{
+        height:58px;
+        border-radius:18px;
+        border:1.5px solid rgba(165,106,67,.22);
+        padding:0 20px;
+        font-size:16px;
+        background: rgba(255,255,255,.75);
+    }
 
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.03);
+    .custom-input:focus{
+        border-color:#A56A43;
+        box-shadow:none;
+        background: rgba(255,255,255,.9);
+    }
 
-}
+    .save-btn{
+        height:58px;
+        border:none;
+        padding:0 28px;
+        border-radius:18px;
+        background: linear-gradient(135deg,#A56A43 0%, #C8845A 100%);
+        color:#F7F3EE;
+        font-weight:800;
+        font-size:16px;
+        transition:.2s;
+        width: fit-content;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+    }
 
-.profile-avatar{
+    .save-btn:hover{
+        background: linear-gradient(135deg,#8E5636 0%, #B9744B 100%);
+        transform: translateY(-1px);
+        color:#F7F3EE;
+    }
 
-    width:110px;
-    height:110px;
+    /* Sidebar active warna coklat untuk konsistensi tema */
+    .menu a.active{
+        background: linear-gradient(135deg,#A56A43 0%, #C8845A 100%);
+        color:white;
+        box-shadow: 0 18px 32px rgba(165,106,67,.22);
+    }
 
-    margin:auto;
-    margin-bottom:25px;
-
-    border-radius:30px;
-
-    background:linear-gradient(
-        135deg,
-        #6F8F6B,
-        #97AC82
-    );
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:white;
-
-    font-size:46px;
-
-}
-
-.profile-badge{
-
-    background:#EEF2E8;
-
-    color:#6F8F6B;
-
-    padding:12px 18px;
-
-    border-radius:16px;
-
-    font-weight:600;
-
-    display:inline-block;
-
-}
-
-.profile-form-card{
-
-    background:white;
-
-    border-radius:30px;
-
-    padding:40px;
-
-    border:1px solid #EEF1EB;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.03);
-
-}
-
-.custom-input{
-
-    height:58px;
-
-    border-radius:18px;
-
-    border:1.5px solid #DCE3D5;
-
-    padding:0 20px;
-
-    font-size:16px;
-
-}
-
-.custom-input:focus{
-
-    border-color:#6F8F6B;
-
-    box-shadow:none;
-
-}
-
-.save-btn{
-
-    height:58px;
-
-    border:none;
-
-    padding:0 28px;
-
-    border-radius:18px;
-
-    background:linear-gradient(
-        135deg,
-        #6F8F6B,
-        #97AC82
-    );
-
-    color:white;
-
-    font-weight:700;
-
-    font-size:16px;
-
-    transition:.2s;
-
-}
-
-.save-btn:hover{
-
-    opacity:.92;
-
-}
+    .menu a:hover{
+        background: rgba(165,106,67,.12);
+        color:#2A211C;
+    }
 
 </style>
 
 @endsection
+

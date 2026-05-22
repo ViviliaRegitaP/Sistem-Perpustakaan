@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="card border-0 shadow-sm rounded-5 p-4">
+<div class="card border-0 shadow-sm p-4" style="border-radius:32px; background: rgba(255,255,255,.92); border:1px solid rgba(232,222,213,.9);">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -19,7 +19,7 @@
 
         <table class="table align-middle">
 
-            <thead style="background:#EEF2EA;">
+<thead style="background:rgba(241,212,179,.38);">
 
                 <tr>
                     <th>Kode</th>
@@ -52,9 +52,9 @@
 
                         <td>
 
-                            <span
+<span
                                 class="badge rounded-pill px-3 py-2"
-                                style="background:#7C9B72;"
+                                style="background: rgba(124,79,56,.92);"
                             >
                                 {{ $buku->stok }}
                             </span>

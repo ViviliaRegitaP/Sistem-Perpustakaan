@@ -61,12 +61,12 @@
                             <td>
                                 <div class="d-flex gap-2">
 
-                                    <a href="{{ route('kategori.edit', $item->id_kategori) }}"
+                                    <a href="{{ route('kategori.edit', $item->id) }}"
                                        class="btn btn-sm btn-primary-custom">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <form action="{{ route('kategori.destroy', $item->id_kategori) }}"
+                                    <form action="{{ route('kategori.destroy', $item->id) }}"
                                           method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -124,7 +124,7 @@
     background:#FAFCF8;
 }
 .btn-primary-custom{
-    background:linear-gradient(135deg,#6F8F6B,#97AC82);
+    background:var(--gradient-btn);
     color:white;
     text-decoration:none;
     border:none;
