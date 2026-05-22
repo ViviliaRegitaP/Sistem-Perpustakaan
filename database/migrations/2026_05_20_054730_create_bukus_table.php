@@ -19,6 +19,7 @@ public function up(): void
         $table->string('penerbit');
         $table->year('tahun_terbit');
         $table->integer('stok');
+        $table->unsignedBigInteger('kategori_id')->nullable();
         $table->timestamps();
     });
 }

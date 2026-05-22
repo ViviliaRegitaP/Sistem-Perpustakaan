@@ -88,6 +88,8 @@
                     <th>Kode</th>
                     <th>Judul</th>
                     <th>Penulis</th>
+                    <th>Penerbit</th>
+                    <th>Tahun</th>
                     <th>Stok</th>
 
                 </tr>
@@ -110,6 +112,16 @@
 
                         <td>
                             {{ $buku->penulis }}
+                        </td>
+
+                        <td>
+
+                            {{ $buku->penerbit }}
+
+                        </td>
+
+                        <td>
+                            {{ $buku->tahun_terbit }}
                         </td>
 
                         <td>
@@ -164,7 +176,7 @@
     align-items:center;
     justify-content:center;
 
-    color:#6F8F6B;
+    color:var(--primary);
 
     font-size:28px;
 
@@ -192,11 +204,7 @@
 
 .btn-lihat{
 
-    background:linear-gradient(
-        135deg,
-        #6F8F6B,
-        #97AC82
-    );
+    background:var(--gradient-btn);
 
     color:white;
 
@@ -233,7 +241,7 @@
 
 .stok-badge{
 
-    background:#6F8F6B;
+    background:rgba(124,79,56,.92);
 
     color:white;
 

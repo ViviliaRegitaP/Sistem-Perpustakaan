@@ -21,6 +21,13 @@ class Buku extends Model
     protected $casts = [
         'tahun_terbit' => 'integer',
         'stok' => 'integer',
+        'kategori_id' => 'integer',
     ];
+
+    // relasi kategori
+    public function kategori()
+{
+    return $this->belongsTo(Kategori::class, 'kategori_id');
+}
 }
 

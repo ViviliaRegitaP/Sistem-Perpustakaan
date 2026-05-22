@@ -4,7 +4,10 @@
 
 @section('content')
 
+<div class="dashboard-page">
+
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
 
     <div>
 
@@ -19,24 +22,11 @@
     </div>
 
     <a href="{{ route('bukus.index') }}"
-       style="
-            background:linear-gradient(135deg,#6F8F6B,#97AC82);
-            color:white;
-            border-radius:16px;
-            padding:14px 22px;
-            font-weight:600;
-            border:none;
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            gap:10px;
-            font-size:16px;
-            line-height:1.2;
-            text-decoration:none;
-       ">
-        <i class="bi bi-search" style="font-size:18px;"></i>
+       class="btn-primary-custom">
+        <i class="bi bi-search"></i>
         Cari Buku
     </a>
+
 
 </div>
 
@@ -79,8 +69,8 @@
                     <i class="bi bi-book"
                        style="
                             font-size:34px;
-                            color:#6F8F6B;
-                       ">
+                            color:var(--primary);
+                       " >
                     </i>
                 </div>
 
@@ -125,8 +115,8 @@
                     <i class="bi bi-stack"
                        style="
                             font-size:34px;
-                            color:#6F8F6B;
-                       ">
+                            color:var(--primary);
+                       " >
                     </i>
                 </div>
 
@@ -171,7 +161,7 @@
                     <i class="bi bi-journal-check"
                        style="
                             font-size:34px;
-                            color:#6F8F6B;
+                            color:var(--primary);
                        ">
                     </i>
                 </div>
@@ -219,6 +209,7 @@
                         <th>Judul</th>
                         <th>Penulis</th>
                         <th>Penerbit</th>
+                        <th>Kategori</th>
                         <th>Stok</th>
 
                     </tr>
@@ -247,12 +238,19 @@
                                 {{ $buku->penerbit }}
                             </td>
 
+
+                            <td>
+                                {{ optional($buku->kategori)->nama_kategori ?? '-' }}
+                            </td>
+
+
+
                             <td>
 
                                 <span
                                     class="badge"
                                     style="
-                                        background:#6F8F6B;
+                        background:rgba(124,79,56,.92);
                                         padding:10px 14px;
                                         border-radius:12px;
                                     "
@@ -262,18 +260,18 @@
 
                             </td>
 
+
                         </tr>
 
                     @empty
 
                         <tr>
 
-                            <td colspan="5"
+                            <td colspan="6"
                                 class="text-center py-5 text-muted">
 
                                 Belum ada buku tersedia.
 
-                            </td>
 
                         </tr>
 
@@ -289,4 +287,82 @@
 
 </div>
 
+<style>
+/* Dashboard Anggota - theme cream/beige (scoped) */
+
+.dashboard-page a.btn-primary-custom,
+.dashboard-page .btn-primary-custom{
+
+    background: var(--gradient-btn);
+    color:white;
+    border:none;
+    border-radius:18px;
+    padding:14px 22px;
+    font-weight:650;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:16px;
+    line-height:1.2;
+    transition: all .2s ease;
+    box-shadow: 0 14px 28px rgba(124,79,56,.18);
+    text-decoration:none;
+}
+
+a.btn-primary-custom:hover,
+.btn-primary-custom:hover{
+    transform: translateY(-1px);
+    opacity:.95;
+    color:white;
+}
+
+
+.dashboard-page .dashboard-card,
+.dashboard-page .card{
+
+    border-radius:30px;
+}
+
+/* Card panels inside dashboard */
+.card{
+    background: rgba(255,255,255,.92) !important;
+    border:1px solid rgba(232,222,213,.9) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,.04) !important;
+}
+
+/* Icon bg + text colors (inline override) */
+.dashboard-page .badge{
+
+    background: rgba(124,79,56,.92) !important;
+    color:white !important;
+    border-radius:999px !important;
+    font-weight:700 !important;
+}
+
+.dashboard-page .table thead th{
+
+    border:none !important;
+    color:#2A211C !important;
+    background: rgba(241,212,179,.38) !important;
+    font-weight:850 !important;
+}
+
+.dashboard-page .table tbody td{
+
+    border-color: rgba(232,222,213,.8) !important;
+    color:#2A211C !important;
+}
+
+
+.dashboard-page .table tbody tr:hover{
+
+    background:#FAF7F2;
+}
+
+</style>
+
+</div>
+
 @endsection
+

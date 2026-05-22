@@ -7,19 +7,30 @@
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
     <div>
-        <h2 class="fw-bold mb-1" style="color:#243020;">
+
+        <h2 class="fw-bold mb-1"
+            style="
+                color:#2A211C;
+                font-family:'Cormorant Garamond', serif;
+                font-size:34px;
+            ">
+
             Data Buku
+
         </h2>
 
         <p class="text-muted mb-0">
             Kelola seluruh data buku perpustakaan.
         </p>
+
     </div>
 
     <a href="{{ route('bukus.create') }}"
        class="btn btn-primary-custom">
+
         <i class="bi bi-plus-circle me-2"></i>
         Tambah Buku
+
     </a>
 
 </div>
@@ -33,15 +44,23 @@
             <table class="table align-middle custom-table">
 
                 <thead>
+
                     <tr>
+
                         <th>Kode</th>
                         <th>Judul</th>
                         <th>Penulis</th>
                         <th>Penerbit</th>
                         <th>Tahun</th>
+
+                        {{-- TAMBAHAN --}}
+                        <th>Kategori</th>
+
                         <th>Stok</th>
                         <th width="120">Aksi</th>
+
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -58,11 +77,28 @@
                                 {{ $buku->judul }}
                             </td>
 
-                            <td>{{ $buku->penulis }}</td>
+                            <td>
+                                {{ $buku->penulis }}
+                            </td>
 
-                            <td>{{ $buku->penerbit }}</td>
+                            <td>
+                                {{ $buku->penerbit }}
+                            </td>
 
-                            <td>{{ $buku->tahun_terbit }}</td>
+                            <td>
+                                {{ $buku->tahun_terbit }}
+                            </td>
+
+                            {{-- TAMBAHAN --}}
+                            <td>
+
+                                <span class="badge-kategori">
+
+                                    {{ $buku->kategori->nama_kategori ?? '-' }}
+
+                                </span>
+
+                            </td>
 
                             <td>
 
@@ -78,13 +114,16 @@
 
                                     <a href="{{ route('bukus.edit', $buku) }}"
                                        class="btn btn-sm btn-primary-custom">
+
                                         <i class="bi bi-pencil"></i>
+
                                     </a>
 
                                     <form
                                         action="{{ route('bukus.destroy', $buku) }}"
                                         method="POST"
                                     >
+
                                         @csrf
                                         @method('DELETE')
 
@@ -93,7 +132,9 @@
                                             class="btn btn-sm btn-danger-custom"
                                             onclick="return confirm('Hapus buku ini?')"
                                         >
+
                                             <i class="bi bi-trash"></i>
+
                                         </button>
 
                                     </form>
@@ -107,10 +148,14 @@
                     @empty
 
                         <tr>
-                            <td colspan="7"
+
+                            <td colspan="8"
                                 class="text-center py-5 text-muted">
+
                                 Belum ada data buku.
+
                             </td>
+
                         </tr>
 
                     @endforelse
@@ -128,9 +173,10 @@
 <style>
 
 .data-card{
-    border-radius:24px;
-    background:white;
-    box-shadow:0 10px 30px rgba(0,0,0,.05);
+    border-radius:28px;
+    background: rgba(255,255,255,.92);
+    box-shadow:0 14px 35px rgba(0,0,0,.05);
+    border:1px solid rgba(232,222,213,.9);
 }
 
 .custom-table thead th{
@@ -151,19 +197,14 @@
     background:#FAFCF8;
 }
 
-/* Khusus halaman Data Buku: samakan ukuran tombol dengan dashboard admin */
 .btn-primary-custom{
-    background:linear-gradient(
-        135deg,
-        #6F8F6B,
-        #97AC82
-    );
+    background: var(--gradient-btn);
     color:white;
     text-decoration:none;
     border:none;
-    border-radius:16px;
+    border-radius:18px;
     padding:14px 22px;
-    font-weight:600;
+    font-weight:650;
 
     display:inline-flex;
     align-items:center;
@@ -205,14 +246,23 @@
     color:white;
 }
 
-
 .badge-stock{
-    background:#6F8F6B;
+    background:var(--gradient-btn);
     color:white;
     padding:8px 14px;
     border-radius:999px;
     font-size:13px;
     font-weight:600;
+}
+
+/* TAMBAHAN */
+.badge-kategori{
+    background:#F3E6D9;
+    color:#9C6644;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
 }
 
 </style>

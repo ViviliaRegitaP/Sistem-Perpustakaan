@@ -128,14 +128,17 @@
 
             <thead>
 
-                <tr>
+                    <tr>
 
-                    <th>Kode</th>
-                    <th>Judul</th>
-                    <th>Penulis</th>
-                    <th>Stok</th>
+                        <th>Kode</th>
+                        <th>Judul</th>
+                        <th>Penulis</th>
+                        <th>Penerbit</th>
+                        <th>Tahun</th>
+                        <th>Kategori</th>
+                        <th>Stok</th>
 
-                </tr>
+                    </tr>
 
             </thead>
 
@@ -158,6 +161,18 @@
                         </td>
 
                         <td>
+                            {{ $buku->penerbit }}
+                        </td>
+
+                        <td>
+                            {{ $buku->tahun_terbit }}
+                        </td>
+
+                        <td>
+                            {{ optional($buku->kategori)->nama_kategori ?? '-' }}
+                        </td>
+
+                        <td>
 
                             <span class="stok-badge">
 
@@ -166,6 +181,7 @@
                             </span>
 
                         </td>
+
 
                     </tr>
 
@@ -180,132 +196,92 @@
 </div>
 
 <style>
+/* Admin Dashboard (tema cream/beige, coklat soft) */
 
-.dashboard-card{
-
-    background:white;
-
-    border-radius:28px;
-
-    padding:30px;
-
-    border:1px solid #EEF1EB;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.03);
-
-}
-
-.dashboard-icon{
-
-    width:70px;
-    height:70px;
-
-    border-radius:22px;
-
-    background:#EEF2E8;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#6F8F6B;
-
-    font-size:28px;
-
-}
-
-.card-label{
-
-    color:#7A8575;
-
-    font-size:15px;
-
-    margin-bottom:10px;
-
-}
-
-.card-number{
-
-    font-size:54px;
-
-    font-weight:800;
-
-    color:#243020;
-
-}
-
-.btn-primary-custom{
-
-    background:linear-gradient(
-        135deg,
-        #6F8F6B,
-        #97AC82
-    );
-
+a.btn-primary-custom{
+    background: var(--gradient-btn);
     color:white;
-
     text-decoration:none;
-
     border:none;
-
-    border-radius:16px;
-
+    border-radius:18px;
     padding:14px 22px;
-
-    font-weight:600;
-
+    font-weight:650;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-
     gap:10px;
-
     font-size:16px;
     line-height:1.2;
-
-    transition:.2s;
-
+    transition: all .2s ease;
+    box-shadow: 0 14px 28px rgba(124,79,56,.18);
 }
 
-.btn-primary-custom:hover{
-
-    opacity:.92;
+a.btn-primary-custom:hover{
+    transform: translateY(-1px);
+    opacity:.95;
     color:white;
-
 }
 
+.dashboard-card{
+    background: rgba(255,255,255,.9);
+    border-radius:30px;
+    padding:30px;
+    border:1px solid rgba(232,222,213,.9);
+    box-shadow: 0 12px 30px rgba(0,0,0,.04);
+}
+
+.dashboard-icon{
+    width:74px;
+    height:74px;
+    border-radius:26px;
+    background: rgba(241,212,179,.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--primary);
+    font-size:28px;
+}
+
+.card-label{
+    color:#7A6A61;
+    font-size:15px;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.card-number{
+    font-size:56px;
+    font-weight:800;
+    color:#2A211C;
+}
 
 .stok-badge{
-
-    background:#6F8F6B;
-
+    background: rgba(124,79,56,.92);
     color:white;
-
     padding:8px 14px;
-
-    border-radius:12px;
-
+    border-radius:999px;
     font-weight:700;
-
+    letter-spacing: .2px;
 }
 
 table thead th{
-
     border:none !important;
-
-    color:#7A8575;
-
-    font-weight:700;
-
+    color:#7A6A61;
+    font-weight:800;
 }
 
 table tbody td{
-
     padding:20px 14px !important;
-
     border:none !important;
+    color:#2A211C;
+}
 
+table tbody tr{
+    transition: background .2s ease, transform .2s ease;
+}
+
+table tbody tr:hover{
+    background:#FAF7F2;
 }
 
 </style>
