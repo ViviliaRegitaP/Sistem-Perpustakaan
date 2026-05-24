@@ -115,10 +115,10 @@
 
                     <th class="py-3 border-0">Kode</th>
                     <th class="py-3 border-0">Judul</th>
-                    <th class="py-3 border-0">Kategori</th>
                     <th class="py-3 border-0">Penulis</th>
                     <th class="py-3 border-0">Penerbit</th>
                     <th class="py-3 border-0">Tahun</th>
+                    <th class="py-3 border-0">Kategori</th>
                     <th class="py-3 border-0">Stok</th>
                     <th class="py-3 border-0">Aksi</th>
 
@@ -141,10 +141,6 @@
                         </td>
 
                         <td>
-                            {{ $buku->kategori->nama }}
-                        </td>
-
-                        <td>
                             {{ $buku->penulis }}
                         </td>
 
@@ -154,6 +150,10 @@
 
                         <td>
                             {{ $buku->tahun_terbit }}
+                        </td>
+
+                        <td>
+                            {{ optional($buku->kategori)->nama_kategori ?? '-' }}
                         </td>
 
                         <td>
@@ -188,8 +188,7 @@
                             </form>
 
                         </td>
-
-                    </tr>
+                 </tr>
 
                 @empty
 

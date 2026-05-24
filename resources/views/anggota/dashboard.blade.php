@@ -69,7 +69,7 @@
         </div>
 
         {{-- YANG DIBENERIN CUMA INI --}}
-        <a href="{{ route('bukus.index') }}"
+        <a href="/daftar-buku"
            class="btn-lihat">
 
             <i class="bi bi-book me-2"></i>
@@ -125,7 +125,7 @@
                             {{ $buku->tahun_terbit }}
                         </td>
 
-                        <td>
+                         <td>
                             {{ optional($buku->kategori)->nama_kategori ?? '-' }}
                         </td>
 

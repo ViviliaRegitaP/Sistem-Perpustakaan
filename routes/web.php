@@ -3,6 +3,7 @@
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Buku;
@@ -132,100 +133,32 @@ Route::get('/pinjam', function () {
 // PEMINJAMAN SAYA
 // ======================
 
-Route::get('/peminjaman', function () {
-
-    $peminjamans = Peminjaman::with('buku')
-                    ->where('user_id', Auth::id())
-                    ->latest()
-                    ->get();
-
-    return view('anggota.peminjaman', compact('peminjamans'));
-
-})->middleware('auth');
+Route::get('/peminjaman', [PeminjamanController::class, 'index'])
+    ->middleware('auth');
 
 
 // ======================
 // PROSES PINJAM
 // ======================
 
-Route::post('/pinjam/{id}', function ($id) {
-
-    $buku = Buku::findOrFail($id);
-
-    // CEK STOK
-    if ($buku->stok <= 0) {
-
-        return redirect('/daftar-buku')
-            ->with('error', 'Stok buku habis.');
-
-    }
-
-    // SIMPAN PEMINJAMAN
-    Peminjaman::create([
-
-        'user_id' => Auth::id(),
-
-        'buku_id' => $buku->id,
-
-        'tanggal_pinjam' => now(),
-
-        // TAMBAHAN BATAS KEMBALI 7 HARI
-        'tanggal_kembali' => now()->addDays(7),
-
-        'status' => 'Dipinjam',
-
-    ]);
-
-    // KURANGI STOK
-    $buku->stok -= 1;
-
-    $buku->save();
-
-    return redirect('/daftar-buku')
-        ->with('success', 'Buku berhasil dipinjam!');
-
-})->middleware('auth');
+Route::post('/pinjam/{id}', [PeminjamanController::class, 'store'])
+    ->middleware('auth');
 
 
 // ======================
 // KELOLA PEMINJAMAN ADMIN
 // ======================
 
-Route::get('/kelola-peminjaman', function () {
-
-    $peminjamans = Peminjaman::with(['user', 'buku'])
-                    ->latest()
-                    ->get();
-
-    return view('admin.kelola-peminjaman', compact('peminjamans'));
-
-})->middleware('auth');
+Route::get('/kelola-peminjaman', [PeminjamanController::class, 'kelola'])
+    ->middleware('auth');
 
 
 // ======================
 // KEMBALIKAN BUKU
 // ======================
 
-Route::post('/kembalikan/{id}', function ($id) {
-
-    $pinjam = Peminjaman::findOrFail($id);
-
-    // UBAH STATUS
-    $pinjam->status = 'Dikembalikan';
-
-    $pinjam->save();
-
-    // TAMBAH STOK BUKU
-    $buku = Buku::findOrFail($pinjam->buku_id);
-
-    $buku->stok += 1;
-
-    $buku->save();
-
-    return redirect('/kelola-peminjaman')
-        ->with('success', 'Buku berhasil dikembalikan.');
-
-})->middleware('auth');
+Route::post('/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])
+    ->middleware('auth');
 
 
 require __DIR__.'/auth.php';
