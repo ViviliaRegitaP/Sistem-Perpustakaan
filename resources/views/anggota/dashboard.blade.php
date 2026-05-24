@@ -27,7 +27,6 @@
 {{-- CARD TOTAL --}}
 <div class="dashboard-card mb-4">
 
-
     <div class="d-flex justify-content-between align-items-center">
 
         <div>
@@ -50,6 +49,8 @@
 
 </div>
 
+
+
 {{-- BUKU TERBARU --}}
 <div class="dashboard-card">
 
@@ -58,16 +59,17 @@
         <div>
 
             <h4 class="fw-bold mb-1">
-                Buku Terbaru
+                Data Buku Terbaru
             </h4>
 
             <p class="text-muted mb-0">
-                Daftar buku terbaru perpustakaan.
+                Kelola data buku perpustakaan.
             </p>
 
         </div>
 
-        <a href="/daftar-buku"
+        {{-- YANG DIBENERIN CUMA INI --}}
+        <a href="{{ route('bukus.index') }}"
            class="btn-lihat">
 
             <i class="bi bi-book me-2"></i>
@@ -83,16 +85,17 @@
 
             <thead>
 
-                <tr>
+                    <tr>
 
-                    <th>Kode</th>
-                    <th>Judul</th>
-                    <th>Penulis</th>
-                    <th>Penerbit</th>
-                    <th>Tahun</th>
-                    <th>Stok</th>
+                        <th>Kode</th>
+                        <th>Judul</th>
+                        <th>Penulis</th>
+                        <th>Penerbit</th>
+                        <th>Tahun</th>
+                        <th>Kategori</th>
+                        <th>Stok</th>
 
-                </tr>
+                    </tr>
 
             </thead>
 
@@ -115,13 +118,15 @@
                         </td>
 
                         <td>
-
                             {{ $buku->penerbit }}
-
                         </td>
 
                         <td>
                             {{ $buku->tahun_terbit }}
+                        </td>
+
+                        <td>
+                            {{ optional($buku->kategori)->nama_kategori ?? '-' }}
                         </td>
 
                         <td>
@@ -133,6 +138,7 @@
                             </span>
 
                         </td>
+
 
                     </tr>
 
@@ -204,7 +210,7 @@
 
 .btn-lihat{
 
-    background:var(--gradient-btn);
+    background:#A86E4D;
 
     color:white;
 
@@ -216,7 +222,7 @@
 
     padding:14px 22px;
 
-    font-weight:600;
+    font-weight:700;
 
     display:inline-flex;
     align-items:center;
@@ -229,15 +235,20 @@
 
     transition:.2s;
 
+    box-shadow:
+    0 8px 18px rgba(124,79,56,.18);
+
 }
 
 .btn-lihat:hover{
 
-    opacity:.92;
+    background:#9A6244;
+
     color:white;
 
-}
+    transform:translateY(-1px);
 
+}
 
 .stok-badge{
 

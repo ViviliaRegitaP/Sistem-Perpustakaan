@@ -7,8 +7,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <title>@yield('title', 'Lentera Pustaka')</title>
 
@@ -36,10 +36,8 @@
             --card: rgba(255,255,255,.82);
 
             --gradient-btn: linear-gradient(135deg,#7C4F38 0%,#B17457 100%);
-            --gradient-btn-2: linear-gradient(135deg,#D9A066 0%,#F3C98B 100%);
             --shadow: 0 10px 35px rgba(0,0,0,.04);
         }
-
 
         *{
             margin:0;
@@ -51,14 +49,11 @@
             background:var(--bg);
             font-family:'Inter',sans-serif;
             color:var(--dark);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-
 
         /* SIDEBAR */
 
-.sidebar{
+        .sidebar{
             width:290px;
             height:100vh;
             position:fixed;
@@ -71,9 +66,7 @@
             display:flex;
             flex-direction:column;
             z-index:1000;
-            transition: width .25s ease;
         }
-
 
         /* LOGO */
 
@@ -81,11 +74,10 @@
             display:flex;
             align-items:center;
             gap:14px;
-
             margin-bottom:45px;
         }
 
-.logo-icon{
+        .logo-icon{
             width:60px;
             height:60px;
             border-radius:20px;
@@ -95,38 +87,31 @@
             justify-content:center;
             color:white;
             font-size:24px;
-            flex-shrink:0;
-            box-shadow: 0 18px 30px rgba(124,79,56,.18);
         }
 
-
         .logo-text{
-            font-family: 'Cormorant Garamond', serif;
+            font-family:'Cormorant Garamond', serif;
             font-size:24px;
             font-weight:700;
             line-height:1.05;
-
             color:var(--dark);
-            letter-spacing: -.2px;
         }
-
 
         /* PROFILE */
 
-.profile-card{
+        .profile-card{
             display:flex;
             align-items:center;
             gap:12px;
             padding:14px;
             border-radius:26px;
-            background: rgba(241,212,179,.45);
+            background:rgba(241,212,179,.45);
             border:1px solid rgba(217,160,102,.25);
             margin-bottom:35px;
-            transition: transform .25s ease;
+            text-decoration:none;
         }
 
-
-.profile-icon{
+        .profile-icon{
             width:52px;
             height:52px;
             border-radius:18px;
@@ -136,17 +121,12 @@
             justify-content:center;
             color:var(--primary);
             font-size:22px;
-            flex-shrink:0;
         }
 
-
         .user-name{
-
             font-weight:700;
             font-size:18px;
-
             color:var(--dark);
-
         }
 
         /* MENU */
@@ -157,7 +137,7 @@
             gap:12px;
         }
 
-.menu a{
+        .menu a{
             text-decoration:none;
             height:58px;
             border-radius:22px;
@@ -168,35 +148,22 @@
             color:#6B5A52;
             font-weight:650;
             font-size:15.5px;
-            transition: all .25s ease;
-            will-change: transform;
+            transition:.25s;
         }
-
 
         .menu a i{
             font-size:20px;
         }
 
-.menu a:hover{
-            background: rgba(241,212,179,.35);
+        .menu a:hover{
+            background:rgba(241,212,179,.35);
             color:var(--dark);
-            transform: translateY(-1px);
         }
-
 
         .menu a.active{
-            background: var(--gradient-btn);
+            background:var(--gradient-btn);
             color:white;
-            box-shadow: 0 18px 32px rgba(124,79,56,.22);
         }
-
-        .menu a .bi,
-        .menu a i{
-            color: currentColor;
-            opacity: .95;
-        }
-
-
 
         /* LOGOUT */
 
@@ -204,67 +171,35 @@
             margin-top:auto;
         }
 
-.logout button{
+        .logout button{
             width:100%;
             height:58px;
             border:none;
             border-radius:22px;
-            background: rgba(255,255,255,.9);
+            background:white;
             border:1px solid var(--border);
             color:#6B5A52;
             font-weight:650;
-            font-size:15.5px;
             display:flex;
             align-items:center;
             justify-content:center;
             gap:12px;
-            transition: all .25s ease;
-            cursor:pointer;
-        }
-
-
-.logout button:hover{
-            background: rgba(241,212,179,.35);
-            transform: translateY(-1px);
-        }
-
-
-        .logout i{
-            font-size:20px;
         }
 
         /* MAIN */
 
-.main{
+        .main{
             margin-left:290px;
             padding:34px;
         }
 
         .content-card{
-            background: rgba(255,255,255,.86);
-            backdrop-filter: blur(12px);
+            background:rgba(255,255,255,.86);
             border-radius:34px;
             min-height:calc(100vh - 70px);
             padding:34px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(232,222,213,.8);
+            box-shadow:var(--shadow);
         }
-
-
-        /* RESPONSIVE */
-
-        @media(max-width:991px){
-            .sidebar{
-                width:100%;
-                height:auto;
-                position:relative;
-            }
-            .main{
-                margin-left:0;
-                padding:18px;
-            }
-        }
-
 
     </style>
 
@@ -290,31 +225,22 @@
         </div>
 
         {{-- PROFILE --}}
-        @if(Auth::user()->email == 'admin@perpus.com')
-            <a href="{{ route('dashboard') }}" class="profile-card" style="text-decoration:none;">
-        @else
-            <a href="{{ route('profile.edit') }}" class="profile-card" style="text-decoration:none;">
-        @endif
+        <a href="{{ route('profile.edit') }}"
+           class="profile-card">
 
             <div class="profile-icon">
                 <i class="bi bi-person"></i>
             </div>
 
-            <div>
-
-                <div class="user-name">
-                    {{ Auth::user()->name ?? 'User' }}
-                </div>
-
+            <div class="user-name">
+                {{ Auth::user()->name ?? 'User' }}
             </div>
 
         </a>
 
-
         {{-- MENU --}}
         <div class="menu">
 
-            {{-- DASHBOARD --}}
             <a
                 href="{{ route('dashboard') }}"
                 class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"
@@ -323,34 +249,52 @@
                 Dashboard
             </a>
 
-            {{-- ADMIN --}}
+            {{-- MENU ADMIN --}}
             @if(Auth::user()->email == 'admin@perpus.com')
 
                 <a
                     href="/bukus"
                     class="{{ request()->is('bukus*') ? 'active' : '' }}"
                 >
-                    <i class="bi bi-book"></i>
-                    Data Buku
+                    <i class="bi bi-book-half"></i>
+                    Kelola Buku
                 </a>
 
-             {{-- KATEGORI --}}
                 <a
-                    href="{{ route('kategori.index') }}"
+                    href="/kategori"
                     class="{{ request()->is('kategori*') ? 'active' : '' }}"
                 >
                     <i class="bi bi-tags"></i>
                     Kategori
                 </a>
 
-            {{-- ANGGOTA --}}
-            @else
+                <a
+                    href="/kelola-peminjaman"
+                    class="{{ request()->is('kelola-peminjaman') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-journal-check"></i>
+                    Kelola Peminjaman
+                </a>
+
+            @endif
+
+            {{-- MENU ANGGOTA --}}
+            @if(Auth::user()->email != 'admin@perpus.com')
+
                 <a
                     href="/daftar-buku"
                     class="{{ request()->is('daftar-buku') ? 'active' : '' }}"
                 >
                     <i class="bi bi-book"></i>
                     Daftar Buku
+                </a>
+
+                <a
+                    href="/peminjaman"
+                    class="{{ request()->is('peminjaman') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-journal-text"></i>
+                    Peminjaman Saya
                 </a>
 
             @endif
