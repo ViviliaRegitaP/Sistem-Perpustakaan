@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Fine;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Auth;
 
@@ -85,17 +86,32 @@ class PeminjamanController extends Controller
     {
         $pinjam = Peminjaman::findOrFail($id);
 
-        // UBAH STATUS
         $pinjam->status = 'Dikembalikan';
-
         $pinjam->save();
 
-        // TAMBAH STOK
         $buku = Buku::findOrFail($pinjam->buku_id);
-
         $buku->stok += 1;
-
         $buku->save();
+
+        // =========================
+        // FINE LOGIC
+        // =========================
+
+        if (
+            now()->gt($pinjam->tanggal_kembali)
+            && !$pinjam->fine
+        ) {
+            $daysLate = now()->diffInDays($pinjam->tanggal_kembali);
+            $fineAmount = $daysLate * 2000;
+
+            Fine::create([
+                'peminjaman_id' => $pinjam->id,
+                'jumlah_denda' => $fineAmount,
+                'dibayar' => 0,
+                'sisa_denda' => $fineAmount,
+                'status' => 'UNPAID',
+            ]);
+        }
 
         return redirect('/kelola-peminjaman')
             ->with('success', 'Buku berhasil dikembalikan.');

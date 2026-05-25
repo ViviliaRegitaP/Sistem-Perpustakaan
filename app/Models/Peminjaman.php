@@ -32,4 +32,10 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(Buku::class);
     }
+
+    //RELASI DENDA
+    public function fine()
+    {
+        return $this->hasOne(Fine::class);
+    }
 }

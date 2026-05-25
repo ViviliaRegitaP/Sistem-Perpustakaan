@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\BukuController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FineController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
 use App\Models\Buku;
-use App\Models\Peminjaman;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
@@ -162,3 +162,18 @@ Route::post('/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])
 
 
 require __DIR__.'/auth.php';
+
+// ======================
+// DENDA ADMIN
+// ======================
+
+Route::get('/kelola-denda', [FineController::class, 'adminIndex'])
+    ->middleware('auth');
+
+
+// ======================
+// DENDA USER
+// ======================
+
+Route::get('/denda', [FineController::class, 'userIndex'])
+    ->middleware('auth');

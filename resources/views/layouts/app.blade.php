@@ -12,6 +12,8 @@
 
     <title>@yield('title', 'Lentera Pustaka')</title>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -276,6 +278,14 @@
                     Kelola Peminjaman
                 </a>
 
+                <a
+                    href="/kelola-denda"
+                    class="{{ request()->is('kelola-denda') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-cash-coin"></i>
+                    Kelola Denda
+                </a>
+
             @endif
 
             {{-- MENU ANGGOTA --}}
@@ -295,6 +305,14 @@
                 >
                     <i class="bi bi-journal-text"></i>
                     Peminjaman Saya
+                </a>
+
+                <a
+                    href="/denda"
+                    class="{{ request()->is('denda') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-wallet2"></i>
+                    Denda
                 </a>
 
             @endif
