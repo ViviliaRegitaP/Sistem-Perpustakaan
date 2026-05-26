@@ -47,17 +47,14 @@
 
                     <tr>
 
-                        <th>Kode</th>
+                        <th class="text-center">Kode</th>
                         <th>Judul</th>
                         <th>Penulis</th>
                         <th>Penerbit</th>
-                        <th>Tahun</th>
-
-                        {{-- TAMBAHAN --}}
-                        <th>Kategori</th>
-
-                        <th>Stok</th>
-                        <th width="120">Aksi</th>
+                        <th class="text-center">Tahun</th>
+                        <th class="text-center">Kategori</th>
+                        <th class="text-center">Stok</th>
+                        <th class="text-center" width="140">Aksi</th>
 
                     </tr>
 
@@ -69,28 +66,48 @@
 
                         <tr>
 
-                            <td class="fw-semibold">
+                            {{-- KODE --}}
+                            <td class="fw-semibold text-center">
+
                                 {{ $buku->kode_buku }}
+
                             </td>
 
+
+                            {{-- JUDUL --}}
                             <td class="fw-semibold">
+
                                 {{ $buku->judul }}
+
                             </td>
 
+
+                            {{-- PENULIS --}}
                             <td>
+
                                 {{ $buku->penulis }}
+
                             </td>
 
+
+                            {{-- PENERBIT --}}
                             <td>
+
                                 {{ $buku->penerbit }}
+
                             </td>
 
-                            <td>
+
+                            {{-- TAHUN --}}
+                            <td class="text-center">
+
                                 {{ $buku->tahun_terbit }}
+
                             </td>
 
-                            {{-- TAMBAHAN --}}
-                            <td>
+
+                            {{-- KATEGORI --}}
+                            <td class="text-center">
 
                                 <span class="badge-kategori">
 
@@ -100,18 +117,25 @@
 
                             </td>
 
-                            <td>
+
+                            {{-- STOK --}}
+                            <td class="text-center">
 
                                 <span class="badge-stock">
+
                                     {{ $buku->stok }}
+
                                 </span>
 
                             </td>
 
+
+                            {{-- AKSI --}}
                             <td>
 
-                                <div class="d-flex gap-2">
+                                <div class="d-flex justify-content-center gap-2">
 
+                                    {{-- EDIT --}}
                                     <a href="{{ route('bukus.edit', $buku) }}"
                                        class="btn btn-sm btn-primary-custom">
 
@@ -119,6 +143,8 @@
 
                                     </a>
 
+
+                                    {{-- DELETE --}}
                                     <form
                                         action="{{ route('bukus.destroy', $buku) }}"
                                         method="POST"
@@ -174,45 +200,50 @@
 
 .data-card{
     border-radius:28px;
-    background: rgba(255,255,255,.92);
-    box-shadow:0 14px 35px rgba(0,0,0,.05);
-    border:1px solid rgba(232,222,213,.9);
+    background:rgba(255,255,255,.95);
+    box-shadow:0 10px 30px rgba(0,0,0,.04);
+    border:1px solid #EEE7E1;
+}
+
+
+/* TABLE */
+.custom-table{
+    margin-bottom:0;
 }
 
 .custom-table thead th{
     border:none;
+    background:#F4F6F0;
     color:#243020;
     font-weight:700;
-    padding:18px 14px;
-    background:#EFF3EA;
+    padding:18px 16px;
+    font-size:15px;
 }
 
 .custom-table tbody td{
-    padding:18px 14px;
-    border-color:#EEF1EA;
-    color:#2f3b2f;
+    padding:20px 16px;
+    border-color:#F1ECE7;
+    color:#2F3B2F;
+    vertical-align:middle;
 }
 
 .custom-table tbody tr:hover{
-    background:#FAFCF8;
+    background:#FCFCFA;
 }
 
+
+/* BUTTON */
 .btn-primary-custom{
-    background: var(--gradient-btn);
+    background:var(--gradient-btn);
     color:white;
-    text-decoration:none;
     border:none;
-    border-radius:18px;
-    padding:14px 22px;
-    font-weight:650;
+    border-radius:16px;
+    padding:10px 18px;
+    font-weight:600;
 
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
-
-    font-size:16px;
-    line-height:1.2;
 
     transition:.2s;
 }
@@ -223,46 +254,83 @@
 }
 
 .btn-danger-custom{
-    background:#C96B6B;
+    background:#D46A6A;
     color:white;
     border:none;
-    border-radius:14px;
-    padding:14px 22px;
+    border-radius:16px;
+    padding:10px 18px;
     font-weight:600;
 
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
-
-    font-size:16px;
-    line-height:1.2;
 
     transition:.2s;
 }
 
 .btn-danger-custom:hover{
-    background:#b85b5b;
+    background:#C85B5B;
     color:white;
 }
 
+
+/* BADGE STOK */
 .badge-stock{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:40px;
+    height:40px;
+
     background:var(--gradient-btn);
     color:white;
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:600;
-}
 
-/* TAMBAHAN */
-.badge-kategori{
-    background:#F3E6D9;
-    color:#9C6644;
-    padding:8px 14px;
     border-radius:999px;
+
     font-size:13px;
     font-weight:700;
+}
+
+
+/* BADGE KATEGORI */
+.badge-kategori{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:115px;
+    padding:8px 16px;
+
+    background:#F3E6D9;
+    color:#9C6644;
+
+    border-radius:999px;
+
+    font-size:13px;
+    font-weight:700;
+
+    white-space:nowrap;
+    text-align:center;
+}
+
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .custom-table thead th,
+    .custom-table tbody td{
+        padding:14px 10px;
+        font-size:14px;
+    }
+
+    .badge-kategori{
+        min-width:auto;
+        padding:7px 12px;
+        font-size:12px;
+    }
+
 }
 
 </style>

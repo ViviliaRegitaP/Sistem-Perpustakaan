@@ -36,7 +36,6 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode_buku' => 'required',
             'judul' => 'required',
             'penulis' => 'required',
             'penerbit' => 'required',
@@ -45,6 +44,21 @@ class BukuController extends Controller
             'kategori_id' => 'required|exists:kategoris,id',
         ]);
 
+        // Ambil buku terakhir
+        $lastBook = Buku::latest()->first();
+
+        // Generate nomor kode buku
+        $number = $lastBook
+            ? ((int) substr($lastBook->kode_buku, 2)) + 1
+            : 1;
+
+        // Format kode buku
+        $kode = 'BK' . str_pad($number, 3, '0', STR_PAD_LEFT);
+
+        // Tambahkan kode buku ke validated data
+        $validated['kode_buku'] = $kode;
+
+        // Simpan ke database
         Buku::create($validated);
 
         return redirect()->route('bukus.index')

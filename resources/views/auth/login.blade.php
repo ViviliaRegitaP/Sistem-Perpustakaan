@@ -152,16 +152,12 @@
 
         </div>
 
-        @if (Route::has('password.request'))
-
-            <a
-                href="{{ route('password.request') }}"
-                class="forgot-link"
-            >
-                Lupa password?
-            </a>
-
-        @endif
+        <a
+            href="{{ route('password.request') }}"
+            class="forgot-link"
+        >
+            Lupa password?
+        </a>
 
     </div>
 

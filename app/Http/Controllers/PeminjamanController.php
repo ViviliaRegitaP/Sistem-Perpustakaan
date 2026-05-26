@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Fine;
 use App\Models\Peminjaman;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
-    // ======================
+
+    // =====================================
     // PEMINJAMAN SAYA
-    // ======================
+    // =====================================
 
     public function index()
     {
@@ -20,100 +24,399 @@ class PeminjamanController extends Controller
                         ->latest()
                         ->get();
 
-        return view('anggota.peminjaman', compact('peminjamans'));
+        return view(
+            'anggota.peminjaman',
+            compact('peminjamans')
+        );
     }
 
 
-    // ======================
-    // PROSES PINJAM BUKU
-    // ======================
 
-    public function store($id)
+
+    // =====================================
+    // PINJAM BUKU
+    // =====================================
+
+    public function storeModal(Request $request)
     {
-        $buku = Buku::findOrFail($id);
 
-        // CEK STOK
+        $request->validate([
+
+            'buku_id' => 'required|exists:bukus,id',
+
+        ]);
+
+
+
+
+        // =====================================
+        // AMBIL BUKU
+        // =====================================
+
+        $buku = Buku::findOrFail(
+            $request->buku_id
+        );
+
+
+
+
+        // =====================================
+        // VALIDASI STOK
+        // =====================================
+
         if ($buku->stok <= 0) {
 
             return redirect('/daftar-buku')
-                ->with('error', 'Stok buku habis.');
+                ->with(
+                    'error',
+                    'Stok buku habis.'
+                );
+
         }
 
+
+
+
+        // =====================================
+        // TANGGAL
+        // =====================================
+
+        $tanggalPinjam = Carbon::today();
+
+        $tanggalKembali = Carbon::today()
+                                ->addDays(7);
+
+
+
+
+        // =====================================
         // SIMPAN PEMINJAMAN
+        // =====================================
+
         Peminjaman::create([
 
             'user_id' => Auth::id(),
 
             'buku_id' => $buku->id,
 
-            'tanggal_pinjam' => now(),
+            'tanggal_pinjam' => $tanggalPinjam,
 
-            'tanggal_kembali' => now()->addDays(7),
+            'tanggal_kembali' => $tanggalKembali,
 
-            'status' => 'Dipinjam',
+            'status' => 'Pending',
 
         ]);
 
-        // KURANGI STOK
-        $buku->stok -= 1;
 
-        $buku->save();
 
-        return redirect('/daftar-buku')
-            ->with('success', 'Buku berhasil dipinjam!');
+
+        return redirect('/peminjaman')
+            ->with(
+                'success',
+                'Pengajuan peminjaman berhasil. Menunggu persetujuan admin.'
+            );
     }
 
 
-    // ======================
+
+
+    // =====================================
+    // APPROVE ADMIN
+    // =====================================
+
+    public function approve($id)
+    {
+        $pinjam = Peminjaman::with('buku')
+                    ->findOrFail($id);
+
+
+
+
+        // =====================================
+        // VALIDASI STATUS
+        // =====================================
+
+        if ($pinjam->status !== 'Pending') {
+
+            return redirect('/kelola-peminjaman')
+                ->with(
+                    'error',
+                    'Peminjaman tidak valid.'
+                );
+
+        }
+
+
+
+
+        // =====================================
+        // VALIDASI STOK
+        // =====================================
+
+        if ($pinjam->buku->stok <= 0) {
+
+            return redirect('/kelola-peminjaman')
+                ->with(
+                    'error',
+                    'Stok buku habis.'
+                );
+
+        }
+
+
+
+
+        DB::transaction(function () use ($pinjam) {
+
+            // STATUS DIPINJAM
+            $pinjam->status = 'Dipinjam';
+
+            $pinjam->save();
+
+
+            // KURANGI STOK
+            $pinjam->buku->decrement('stok', 1);
+
+        });
+
+
+
+
+        return redirect('/kelola-peminjaman')
+            ->with(
+                'success',
+                'Peminjaman berhasil disetujui.'
+            );
+    }
+
+
+
+
+    // =====================================
+    // TOLAK ADMIN
+    // =====================================
+
+    public function reject($id)
+    {
+        $pinjam = Peminjaman::findOrFail($id);
+
+
+
+
+        if ($pinjam->status !== 'Pending') {
+
+            return redirect('/kelola-peminjaman')
+                ->with(
+                    'error',
+                    'Peminjaman tidak valid.'
+                );
+
+        }
+
+
+
+
+        // STATUS DITOLAK
+        $pinjam->status = 'Ditolak';
+
+        $pinjam->save();
+
+
+
+
+        return redirect('/kelola-peminjaman')
+            ->with(
+                'success',
+                'Peminjaman berhasil ditolak.'
+            );
+    }
+
+
+
+
+    // =====================================
     // KELOLA PEMINJAMAN ADMIN
-    // ======================
+    // =====================================
 
     public function kelola()
     {
-        $peminjamans = Peminjaman::with(['user', 'buku'])
-                        ->latest()
-                        ->get();
+        $query = Peminjaman::with([
+                    'user',
+                    'buku'
+                ])->latest();
 
-        return view('admin.kelola-peminjaman', compact('peminjamans'));
+
+
+
+        // =====================================
+        // FILTER STATUS
+        // =====================================
+
+        if(request('status')){
+
+            $query->where(
+                'status',
+                request('status')
+            );
+
+        }
+
+
+
+
+        $peminjamans = $query->get();
+
+
+
+
+        return view(
+            'admin.kelola-peminjaman',
+            compact('peminjamans')
+        );
     }
 
 
-    // ======================
+
+
+    // =====================================
     // KEMBALIKAN BUKU
-    // ======================
+    // =====================================
 
     public function kembalikan($id)
     {
         $pinjam = Peminjaman::findOrFail($id);
 
+
+
+
+        // =====================================
+        // HANYA STATUS DIPINJAM
+        // =====================================
+
+        if ($pinjam->status !== 'Dipinjam') {
+
+            return redirect('/kelola-peminjaman')
+                ->with(
+                    'error',
+                    'Buku tidak bisa dikembalikan.'
+                );
+
+        }
+
+
+
+
+        // =====================================
+        // STATUS DIKEMBALIKAN
+        // =====================================
+
         $pinjam->status = 'Dikembalikan';
+
         $pinjam->save();
 
-        $buku = Buku::findOrFail($pinjam->buku_id);
-        $buku->stok += 1;
-        $buku->save();
 
-        // =========================
-        // FINE LOGIC
-        // =========================
+
+
+        // =====================================
+        // TAMBAH STOK
+        // =====================================
+
+        $buku = Buku::findOrFail(
+            $pinjam->buku_id
+        );
+
+        $buku->increment('stok', 1);
+
+
+
+
+        // =====================================
+        // CEK DENDA
+        // =====================================
 
         if (
             now()->gt($pinjam->tanggal_kembali)
-            && !$pinjam->fine
+            && $pinjam->fine()->doesntExist()
         ) {
-            $daysLate = now()->diffInDays($pinjam->tanggal_kembali);
-            $fineAmount = $daysLate * 2000;
+
+            $hariTerlambat = now()->diffInDays(
+                $pinjam->tanggal_kembali
+            );
+
+            $jumlahDenda = $hariTerlambat * 2000;
+
+
+
 
             Fine::create([
+
                 'peminjaman_id' => $pinjam->id,
-                'jumlah_denda' => $fineAmount,
+
+                'jumlah_denda' => $jumlahDenda,
+
                 'dibayar' => 0,
-                'sisa_denda' => $fineAmount,
+
+                'sisa_denda' => $jumlahDenda,
+
                 'status' => 'UNPAID',
+
             ]);
         }
 
+
+
+
         return redirect('/kelola-peminjaman')
-            ->with('success', 'Buku berhasil dikembalikan.');
+            ->with(
+                'success',
+                'Buku berhasil dikembalikan.'
+            );
     }
+
+
+
+
+    // =====================================
+    // HAPUS DATA
+    // =====================================
+
+    public function destroy($id)
+    {
+        $pinjam = Peminjaman::findOrFail($id);
+
+
+
+
+        // =====================================
+        // HANYA STATUS SELESAI
+        // =====================================
+
+        if (
+            $pinjam->status != 'Dikembalikan' &&
+            $pinjam->status != 'Ditolak'
+        ) {
+
+            return redirect('/kelola-peminjaman')
+                ->with(
+                    'error',
+                    'Data aktif tidak bisa dihapus.'
+                );
+
+        }
+
+
+
+
+        $pinjam->delete();
+
+
+
+
+        return redirect('/kelola-peminjaman')
+            ->with(
+                'success',
+                'Data berhasil dihapus.'
+            );
+    }
+
 }

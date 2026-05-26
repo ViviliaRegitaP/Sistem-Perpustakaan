@@ -102,16 +102,28 @@
 
                 </div>
 
-                {{-- BUTTON --}}
-                <button
-                    type="submit"
-                    class="save-btn">
+                    {{-- BUTTON --}}
 
-                    <i class="bi bi-check-circle me-2"></i>
+                @if(Auth::user()->email == 'admin@perpus.com')
 
-                    Simpan Perubahan
+                    <div class="small" style="color:#A56A43; font-weight:700; margin-top:8px;">
+                        Admin tidak dapat mengedit profil.
+                    </div>
 
-                </button>
+                @else
+
+                    <button
+                        type="submit"
+                        class="save-btn">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Simpan Perubahan
+
+                    </button>
+
+                @endif
+
 
             </form>
 

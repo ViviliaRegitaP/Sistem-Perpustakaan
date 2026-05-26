@@ -4,134 +4,180 @@
 
 <style>
 
-    /* CARD AGAR TIDAK KEPOTONG */
+    body{
+        overflow-x:hidden;
+    }
+
+    /* CARD */
     .login-card{
+
         width:100%;
-        max-width:520px;
+        max-width:400px;
+
         margin:auto;
-        padding:45px 40px;
+
+        padding:32px 28px;
+
+        background:rgba(255,255,255,.88);
+
+        backdrop-filter:blur(18px);
+
+        border-radius:28px;
+
+        border:1px solid rgba(255,255,255,.4);
+
+        box-shadow:
+            0 15px 35px rgba(0,0,0,.06);
     }
 
     /* TITLE */
     .login-title{
-        text-align:center;
-        margin-bottom:10px;
-    }
 
-    .login-subtitle{
         text-align:center;
-        margin-bottom:32px;
-    }
 
-    /* FORM */
-    .form-label{
-        font-weight:600;
-        margin-bottom:10px;
+        margin-bottom:24px;
+
+        font-size:32px;
+
+        font-weight:800;
+
         color:#2A211C;
     }
 
+    /* LABEL */
+    .form-label{
+
+        font-weight:700;
+
+        margin-bottom:8px;
+
+        color:#2A211C;
+
+        font-size:14px;
+    }
+
+    /* INPUT */
     .input-group-custom{
         position:relative;
     }
 
     .input-group-custom i{
+
         position:absolute;
+
         top:50%;
-        left:18px;
+        left:16px;
+
         transform:translateY(-50%);
-        color:#8B8B8B;
+
+        color:#A58D7F;
+
         z-index:5;
+
+        font-size:14px;
     }
 
     .form-control{
-        height:58px;
-        border-radius:16px;
-        padding-left:50px;
+
+        height:52px;
+
+        border-radius:14px;
+
+        padding-left:46px;
+
         border:1px solid #E8DED5;
+
         background:#fff;
+
+        font-size:14px;
+
+        transition:.3s ease;
     }
 
     .form-control:focus{
-        border-color:#7C4F38;
+
+        border-color:#8B5E3C;
+
         box-shadow:
-            0 0 0 4px rgba(124,79,56,.10);
+            0 0 0 4px rgba(139,94,60,.10);
     }
 
     /* BUTTON */
     .btn-login{
+
         width:100%;
-        height:58px;
+
+        height:52px;
+
         border:none;
-        border-radius:16px;
+
+        border-radius:14px;
 
         background:linear-gradient(
             135deg,
-            #7C4F38,
+            #8B5E3C,
             #B17457
         );
 
         color:white;
-        font-weight:600;
+
+        font-weight:700;
+
         font-size:15px;
 
         transition:.3s ease;
     }
 
     .btn-login:hover{
+
         transform:translateY(-2px);
 
         box-shadow:
-            0 12px 24px rgba(124,79,56,.20);
+            0 10px 22px rgba(139,94,60,.18);
     }
 
     /* LOGIN TEXT */
     .register-text{
+
         text-align:center;
-        margin-top:24px;
-        font-size:15px;
+
+        margin-top:20px;
+
+        font-size:14px;
+
         color:#7A6A61;
-        font-weight:500;
     }
 
     .register-text a{
-        color:#7C4F38;
+
+        color:#8B5E3C;
+
         text-decoration:none;
+
         font-weight:700;
-        transition:.3s ease;
-        position:relative;
     }
 
     .register-text a:hover{
-        color:#5E3928;
+        text-decoration:underline;
     }
 
-    .register-text a::after{
-        content:'';
-        position:absolute;
-        left:0;
-        bottom:-3px;
-        width:100%;
-        height:2px;
-        background:#7C4F38;
-        border-radius:10px;
-        transform:scaleX(0);
-        transition:.3s ease;
+    /* ERROR */
+    .text-danger{
+        font-size:13px;
     }
 
-    .register-text a:hover::after{
-        transform:scaleX(1);
-    }
-
-    /* RESPONSIVE */
+    /* MOBILE */
     @media(max-width:768px){
 
         .login-card{
-            padding:35px 24px;
-            border-radius:24px;
+
+            padding:28px 22px;
+
+            border-radius:22px;
         }
 
         .login-title{
-            font-size:38px;
+            font-size:28px;
         }
 
     }
@@ -140,20 +186,17 @@
 
 <div class="login-card">
 
-    <h1 class="login-title">
-        Daftar
-    </h1>
-
-    <p class="login-subtitle">
-        Buat akun untuk mengakses dashboard
-    </p>
+    {{-- TITLE --}}
+    <h2 class="login-title">
+        Daftar Akun
+    </h2>
 
     <form method="POST" action="{{ route('register') }}">
 
         @csrf
 
         {{-- NAMA --}}
-        <div class="mb-4">
+        <div class="mb-3">
 
             <label class="form-label">
                 Nama
@@ -184,7 +227,7 @@
         </div>
 
         {{-- EMAIL --}}
-        <div class="mb-4">
+        <div class="mb-3">
 
             <label class="form-label">
                 Email
@@ -214,7 +257,7 @@
         </div>
 
         {{-- PASSWORD --}}
-        <div class="mb-4">
+        <div class="mb-3">
 
             <label class="form-label">
                 Password
