@@ -2,30 +2,42 @@
 
 @section('content')
 
-<div class="card border-0 shadow-sm p-5" style="border-radius:32px;">
+<div class="card border-0 shadow-sm p-4"
+    style="
+        border-radius:32px;
+        background:#FAF9F7;
+    "
+>
 
-    {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex justify-content-between align-items-start mb-4">
 
         <div>
 
-            <h2 class="fw-bold mb-2">
+            <h2 class="fw-bold mb-2"
+                style="
+                    color:#2B2B2B;
+                    font-size:28px;
+                ">
                 Daftar Buku
             </h2>
 
-            <p class="text-muted mb-0">
+            <p class="text-muted mb-0"
+                style="
+                    font-size:16px;
+                ">
                 Cari dan lihat koleksi buku perpustakaan.
             </p>
 
         </div>
 
         <div
-            class="rounded-4 d-flex align-items-center justify-content-center"
+            class="d-flex align-items-center justify-content-center"
             style="
-                width:70px;
-                height:70px;
-                background:#EEF2EA;
-                color:var(--primary);
+                width:64px;
+                height:64px;
+                border-radius:20px;
+                background:#F3EEE8;
+                color:#B07A4F;
                 font-size:28px;
             "
         >
@@ -34,178 +46,196 @@
 
     </div>
 
-    {{-- ALERT SUCCESS --}}
-    @if(session('success'))
-
-        <div class="alert alert-success border-0 rounded-4 mb-4">
-
-            {{ session('success') }}
-
-        </div>
-
-    @endif
 
 
-    {{-- ALERT ERROR --}}
-    @if(session('error'))
+    <div
+        class="table-responsive"
+        style="
+            border-radius:24px;
+            overflow:hidden;
+            border:1px solid #F1ECE6;
+            background:white;
+        "
+    >
 
-        <div class="alert alert-danger border-0 rounded-4 mb-4">
-
-            {{ session('error') }}
-
-        </div>
-
-    @endif
-
-    {{-- SEARCH --}}
-<form method="GET" action="/daftar-buku">
-
-    <div class="mb-4">
-
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Cari buku..."
-            value="{{ request('search') }}"
+        <table
+            class="table align-middle mb-0"
+            style="min-width:1100px;"
         >
 
-    </div>
-
-    {{-- FILTER KATEGORI --}}
-    <div class="d-flex gap-2 flex-wrap mb-4">
-
-        {{-- SEMUA --}}
-        <a
-            href="/daftar-buku"
-            class="btn-kategori
-            {{ !request('kategori') ? 'active-kategori' : '' }}"
-        >
-
-            Semua
-
-        </a>
-
-        @foreach($kategoris as $kategori)
-
-            <a
-                href="/daftar-buku?kategori={{ $kategori->id }}"
-                class="btn-kategori
-                {{ request('kategori') == $kategori->id ? 'active-kategori' : '' }}"
+            <thead
+                style="
+                    background:#F5F5F0;
+                "
             >
 
-                {{ $kategori->nama_kategori ?? $kategori->nama }}
+                <tr>
 
-            </a>
+                    <th class="border-0 py-4 ps-4">
+                        Kode
+                    </th>
 
-        @endforeach
+                    <th class="border-0 py-4">
+                        Judul
+                    </th>
 
-    </div>
+                    <th class="border-0 py-4">
+                        Penulis
+                    </th>
 
-</form>
+                    <th class="border-0 py-4">
+                        Penerbit
+                    </th>
 
-    {{-- TABLE --}}
-    <div class="table-responsive">
+                    <th class="border-0 py-4 text-center">
+                        Tahun
+                    </th>
 
-        <table class="table align-middle">
+                    <th class="border-0 py-4 text-center">
+                        Kategori
+                    </th>
 
-            <thead>
+                    <th class="border-0 py-4 text-center">
+                        Stok
+                    </th>
 
-                <tr style="background:rgba(241,212,179,.38);">
-
-                    <th class="py-3 border-0">Kode</th>
-                    <th class="py-3 border-0">Judul</th>
-                    <th class="py-3 border-0">Penulis</th>
-                    <th class="py-3 border-0">Penerbit</th>
-                    <th class="py-3 border-0">Tahun</th>
-                    <th class="py-3 border-0">Kategori</th>
-                    <th class="py-3 border-0">Stok</th>
-                    <th class="py-3 border-0">Aksi</th>
+                    <th class="border-0 py-4 text-center pe-4">
+                        Aksi
+                    </th>
 
                 </tr>
 
             </thead>
 
+
+
             <tbody>
 
-                @forelse($bukus as $buku)
+                @foreach($bukus as $index => $buku)
 
-                    <tr>
+                    <tr
+                        style="
+                            border-bottom:1px solid #F5F1EC;
+                        "
+                    >
 
-                        <td class="fw-semibold">
-                            {{ $buku->kode_buku }}
+                        <td class="ps-4 py-4 fw-semibold">
+
+                            BK{{ str_pad($index + 1, 3, '0', STR_PAD_LEFT) }}
+
                         </td>
 
-                        <td>
+
+
+                        <td
+                            class="py-4 fw-semibold"
+                            style="
+                                color:#2B2B2B;
+                                font-size:17px;
+                            "
+                        >
+
                             {{ $buku->judul }}
+
                         </td>
 
-                        <td>
+
+
+                        <td class="py-4">
+
                             {{ $buku->penulis }}
+
                         </td>
 
-                        <td>
+
+
+                        <td class="py-4">
+
                             {{ $buku->penerbit }}
+
                         </td>
 
-                        <td>
+
+
+                        <td class="text-center py-4">
+
                             {{ $buku->tahun_terbit }}
+
                         </td>
 
-                        <td>
-                            {{ optional($buku->kategori)->nama_kategori ?? '-' }}
-                        </td>
 
-                        <td>
+
+                        <td class="text-center py-4">
 
                             <span
-                                class="badge rounded-pill px-3 py-2"
                                 style="
-                                    background:rgba(124,79,56,.92);
+                                    background:#F3E7DA;
+                                    color:#B07A4F;
+                                    border-radius:999px;
+                                    padding:10px 18px;
                                     font-size:14px;
+                                    font-weight:600;
+                                    white-space:nowrap;
+                                    display:inline-block;
                                 "
                             >
-                                {{ $buku->stok }}
+
+                                {{ $buku->kategori->nama_kategori }}
+
                             </span>
 
                         </td>
 
-                        <td>
 
-                            <form action="/pinjam/{{ $buku->id }}" method="POST">
 
-                                @csrf
+                        <td class="text-center py-4">
 
-                                <button
-                                    type="submit"
-                                    class="btn-pinjam">
+                            <span
+                                class="d-inline-flex align-items-center justify-content-center"
+                                style="
+                                    width:42px;
+                                    height:42px;
+                                    border-radius:50%;
+                                    background:#B07A4F;
+                                    color:white;
+                                    font-weight:700;
+                                "
+                            >
 
-                                    <i class="bi bi-journal-plus me-2"></i>
-                                    Pinjam
+                                {{ $buku->stok }}
 
-                                </button>
-
-                            </form>
+                            </span>
 
                         </td>
-                 </tr>
 
-                @empty
 
-                    <tr>
 
-                        <td
-                            colspan="8"
-                            class="text-center py-5 text-muted"
-                        >
+                        <td class="text-center pe-4 py-4">
 
-                            Belum ada buku tersedia.
+                            <button
+                                type="button"
+                                onclick="openModal('{{ $buku->id }}', '{{ $buku->judul }}')"
+                                class="btn border-0 fw-semibold"
+                                style="
+                                    background:#B07A4F;
+                                    color:white;
+                                    border-radius:16px;
+                                    padding:12px 24px;
+                                    min-width:120px;
+                                "
+                            >
+
+                                <i class="bi bi-journal-plus me-2"></i>
+
+                                Pinjam
+
+                            </button>
 
                         </td>
 
                     </tr>
 
-                @endforelse
+                @endforeach
 
             </tbody>
 
@@ -215,67 +245,173 @@
 
 </div>
 
-<style>
 
-.btn-pinjam{
 
-    background:var(--gradient-btn);
+{{-- MODAL PINJAM (Bootstrap) --}}
+<div
+    class="modal fade"
+    id="pinjamModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div
+            class="modal-content"
+            style="
+                border:none;
+                border-radius:28px;
+                background: rgba(255,255,255,.92);
+                border:1px solid rgba(232,222,213,.9);
+                box-shadow: 0 10px 35px rgba(0,0,0,.08);
+            "
+        >
+            <div class="modal-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div
+                        class="mx-auto mb-3 d-flex justify-content-center align-items-center"
+                        style="
+                            width:80px;
+                            height:80px;
+                            border-radius:24px;
+                            background:#A47148;
+                            color:white;
+                            font-size:34px;
+                        "
+                    >
+                        📚
+                    </div>
 
-    color:white;
+                    <h3 class="fw-bold" style="color:#5C3B28;">Form Peminjaman</h3>
+                    <p class="text-muted mb-0">Lengkapi data peminjaman buku.</p>
+                </div>
 
-    border:none;
+                <form method="POST" action="{{ route('pinjam.buku') }}" id="formPinjam">
+                    @csrf
 
-    border-radius:14px;
+                    <input type="hidden" name="buku_id" id="buku_id">
 
-    padding:10px 18px;
+                    <div class="mb-3">
+                        <label class="fw-semibold mb-2">Nama Anggota</label>
+                        <input
+                            type="text"
+                            id="nama_anggota"
+                            readonly
+                            class="form-control rounded-4"
+                            value="{{ Auth::user()->name ?? '' }}"
+                        >
+                    </div>
 
-    font-weight:600;
+                    <div class="mb-3">
+                        <label class="fw-semibold mb-2">Judul Buku</label>
+                        <input type="text" id="judul_buku" readonly class="form-control rounded-4">
+                    </div>
 
-    display:inline-flex;
+                    <div class="mb-3">
+                        <label class="fw-semibold mb-2">Tanggal Pinjam</label>
+                        <input
+                            type="date"
+                            id="tanggal_pinjam"
+                            name="tanggal_pinjam"
+                            readonly
+                            class="form-control rounded-4"
+                            value="{{ date('Y-m-d') }}"
+                        >
+                    </div>
 
-    align-items:center;
+                    <div class="mb-3">
+                        <label class="fw-semibold mb-2">Lama Pinjam (hari)</label>
+                        <input
+                            type="number"
+                            name="lama_pinjam"
+                            id="lama_pinjam"
+                            min="1"
+                            max="7"
+                            value="1"
+                            class="form-control rounded-4"
+                            required
+                        >
+                        <div class="text-muted small mt-2">Maksimal peminjaman 7 hari</div>
+                    </div>
 
-    gap:8px;
+                    <div class="mb-4">
+                        <label class="fw-semibold mb-2">Tanggal Kembali</label>
+                        <input
+                            type="date"
+                            name="tanggal_kembali"
+                            id="tanggal_kembali"
+                            class="form-control rounded-4"
+                            readonly
+                        >
+                    </div>
 
-    transition:.2s;
+                    <div class="p-3 rounded-4 mb-4" style="background:#FFF7ED; border:1px solid #FED7AA;">
+                        <ul class="mb-0 text-muted small" style="padding-left:18px;">
+                            <li class="fw-semibold" style="color:#8B5E3C;">Maksimal peminjaman 7 hari</li>
+                            <li>Denda keterlambatan Rp2.000/hari</li>
+                        </ul>
+                    </div>
 
-}
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn btn-light w-50 rounded-pill" data-bs-dismiss="modal">Batal</button>
 
-.btn-pinjam:hover{
+                        <button
+                            type="submit"
+                            class="btn text-white w-50 rounded-pill"
+                            style="background:#A47148; font-weight:700; border:none;"
+                        >
+                            Konfirmasi Pinjam
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    opacity:.92;
+{{-- SCRIPT (Bootstrap modal + hitung tanggal kembali otomatis) --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const pinjamModalEl = document.getElementById('pinjamModal');
+        const pinjamModal = new bootstrap.Modal(pinjamModalEl);
 
-    color:white;
+        window.setTanggalKembali = function () {
+            const tanggalPinjam = document.getElementById('tanggal_pinjam').value;
+            let lamaPinjam = parseInt(document.getElementById('lama_pinjam').value || '1', 10);
 
-}
+            if (Number.isNaN(lamaPinjam)) lamaPinjam = 1;
+            if (lamaPinjam < 1) lamaPinjam = 1;
+            if (lamaPinjam > 7) lamaPinjam = 7;
 
-.btn-kategori{
+            document.getElementById('lama_pinjam').value = lamaPinjam;
 
-    padding:10px 18px;
+            const [y, m, d] = tanggalPinjam.split('-').map(Number);
+            const date = new Date(y, m - 1, d);
+            date.setDate(date.getDate() + lamaPinjam);
 
-    border-radius:14px;
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
 
-    text-decoration:none;
+            document.getElementById('tanggal_kembali').value = `${yyyy}-${mm}-${dd}`;
+        };
 
-    background:#F3F3F3;
+        window.openModal = function (id, judul) {
+            document.getElementById('buku_id').value = id;
+            document.getElementById('judul_buku').value = judul;
 
-    color:#333;
+            window.setTanggalKembali();
 
-    font-weight:600;
+            pinjamModal.show();
+        };
 
-}
+        window.setTanggalKembali();
 
-.active-kategori{
+        const lamaPinjamInput = document.getElementById('lama_pinjam');
+        if (lamaPinjamInput) {
+            lamaPinjamInput.addEventListener('input', window.setTanggalKembali);
+        }
+    });
+</script>
 
-    background:var(--gradient-btn);
-
-    color:white !important;
-
-    box-shadow:
-    0 8px 18px rgba(124,79,56,.18);
-
-}
-
-</style>
 
 @endsection

@@ -1,179 +1,84 @@
 <?php
 
-use App\Http\Controllers\BukuController;
-use App\Http\Controllers\FineController;
-use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\PeminjamanController;
-use App\Http\Controllers\ProfileController;
-use App\Models\Buku;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\BukuController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController;
+
+use App\Models\Buku;
+use App\Models\Peminjaman;
+use App\Models\User;
+
+require __DIR__.'/auth.php';
+
 Route::get('/', function () {
-
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect('/login');
-
+    return redirect('/dashboard');
 });
-
-
-// ======================
-// DASHBOARD
-// ======================
 
 Route::get('/dashboard', function () {
 
-    // ADMIN
-    if (Auth::user()->email == 'admin@perpus.com') {
-        return view('admin.dashboard');
-    }
+    $totalBuku = Buku::count();
 
-    // ANGGOTA
-    $totalBuku = \App\Models\Buku::count();
+    $totalPeminjaman = Peminjaman::count();
 
-    $totalStok = \App\Models\Buku::sum('stok');
-
-    // RELASI KATEGORI
-    $recent = \App\Models\Buku::with('kategori')
-                ->latest()
-                ->take(5)
-                ->get();
+    $totalUser = User::count();
 
     return view('anggota.dashboard', compact(
         'totalBuku',
-        'totalStok',
-        'recent'
+        'totalPeminjaman',
+        'totalUser'
     ));
 
 })->middleware('auth')->name('dashboard');
 
+Route::middleware('auth')->group(function () {
 
-// ======================
-// DAFTAR BUKU ANGGOTA
-// ======================
+    Route::get('/daftar-buku', function () {
 
-Route::get('/daftar-buku', function () {
+        $bukus = Buku::with('kategori')
+            ->orderBy('id', 'asc')
+            ->get();
 
-    $query = Buku::with('kategori');
+        return view('anggota.daftar-buku', compact('bukus'));
 
-    // SEARCH
-    if(request('search')){
+    })->name('daftar.buku');
 
-        $query->where('judul', 'like', '%' . request('search') . '%');
+    Route::post('/pinjam/buku', [PeminjamanController::class, 'storeModal'])
+        ->name('pinjam.buku');
 
-    }
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])
+        ->name('peminjaman');
 
-    // FILTER KATEGORI
-    if(request('kategori')){
+    Route::get('/denda', [\App\Http\Controllers\FineController::class, 'userIndex'])
+        ->name('denda');
 
-        $query->whereHas('kategori', function($q){
-
-            $q->where('id', request('kategori'));
-
-        });
-
-    }
-
-    $bukus = $query->latest()->get();
-
-    $kategoris = \App\Models\Kategori::all();
-
-    return view('anggota.daftar-buku', compact(
-        'bukus',
-        'kategoris'
-    ));
-
-})->middleware('auth');
-
-
-// ======================
-// PROFILE
-// ======================
-
-Route::middleware(['auth'])->group(function () {
-
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-
-});
-
-
-// ======================
-// ADMIN ONLY
-// ======================
-
-Route::middleware(['auth'])->group(function () {
-
+    // CRUD Buku
     Route::resource('bukus', BukuController::class);
 
     Route::resource('kategori', KategoriController::class);
 
+
 });
 
+Route::middleware('auth')->group(function () {
 
-// ======================
-// PINJAM BUKU
-// ======================
+    Route::get('/kelola-peminjaman', [PeminjamanController::class, 'kelola'])
+        ->name('kelola.peminjaman');
 
-Route::get('/pinjam', function () {
+    Route::post('/peminjaman/{id}/setujui', [PeminjamanController::class, 'approve'])
+        ->name('peminjaman.setujui');
 
-    return view('anggota.pinjam');
+    Route::post('/peminjaman/{id}/tolak', [PeminjamanController::class, 'reject'])
+        ->name('peminjaman.tolak');
 
-})->middleware('auth');
+    Route::post('/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])
+        ->name('peminjaman.kembalikan');
 
+    Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])
+        ->name('peminjaman.destroy');
 
-// ======================
-// PEMINJAMAN SAYA
-// ======================
+    Route::get('/kelola-denda', [\App\Http\Controllers\FineController::class, 'adminIndex'])
+        ->name('kelola.denda');
 
-Route::get('/peminjaman', [PeminjamanController::class, 'index'])
-    ->middleware('auth');
-
-
-// ======================
-// PROSES PINJAM
-// ======================
-
-Route::post('/pinjam/{id}', [PeminjamanController::class, 'store'])
-    ->middleware('auth');
-
-
-// ======================
-// KELOLA PEMINJAMAN ADMIN
-// ======================
-
-Route::get('/kelola-peminjaman', [PeminjamanController::class, 'kelola'])
-    ->middleware('auth');
-
-
-// ======================
-// KEMBALIKAN BUKU
-// ======================
-
-Route::post('/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])
-    ->middleware('auth');
-
-
-require __DIR__.'/auth.php';
-
-// ======================
-// DENDA ADMIN
-// ======================
-
-Route::get('/kelola-denda', [FineController::class, 'adminIndex'])
-    ->middleware('auth');
-
-
-// ======================
-// DENDA USER
-// ======================
-
-Route::get('/denda', [FineController::class, 'userIndex'])
-    ->middleware('auth');
+});

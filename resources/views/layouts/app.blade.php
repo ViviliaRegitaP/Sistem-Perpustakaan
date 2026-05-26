@@ -148,10 +148,16 @@
             align-items:center;
             gap:14px;
             color:#6B5A52;
+
+            /* Samakan semua teks menu (termasuk "Daftar Buku") */
+            font-family:'Inter', sans-serif;
             font-weight:650;
             font-size:15.5px;
+            letter-spacing:0;
+
             transition:.25s;
         }
+
 
         .menu a i{
             font-size:20px;

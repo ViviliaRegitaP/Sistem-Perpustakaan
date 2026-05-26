@@ -208,8 +208,10 @@
                                     <button
                                         type="submit"
                                         class="btn fw-semibold"
-                                        style="background: var(--secondary,#4F46E5); color:#fff; border:0; font-weight:900;"
+                                        style="background:#B07A4F; color:#fff; border:0; font-weight:900; border-radius:16px; padding:12px 24px;"
                                         id="btnSaveEdit"
+                                        onmouseenter="this.style.background='#9B6B43'"
+                                        onmouseleave="this.style.background='#B07A4F'"
                                     >
 
                                         <i class="bi bi-check2-circle me-1"></i>
@@ -253,3 +255,4 @@
         </div>
     </div>
 @endsection
+

@@ -2,168 +2,302 @@
 
 @section('content')
 
-<div class="dashboard-page">
+<div class="card border-0 denda-card">
 
     {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
-            <h2 class="fw-bold mb-2" style="color:#243020;font-size:34px;">
+
+            <h2 class="fw-bold mb-1 title-text">
                 Kelola Denda
             </h2>
 
-            <p class="text-muted mb-0 fs-5">
-                Kelola data denda anggota perpustakaan.
+            <p class="subtitle-text mb-0">
+                Kelola keterlambatan dan pembayaran anggota.
             </p>
+
+        </div>
+
+        <div class="icon-box">
+            <i class="bi bi-wallet2"></i>
         </div>
 
     </div>
 
-    {{-- CARD --}}
-    <div class="card border-0 shadow-sm" style="border-radius:28px;">
 
-        <div class="card-body p-4">
+    {{-- TABLE --}}
+    <div class="table-responsive">
 
-            <h4 class="fw-bold mb-4" style="color:#243020;">
-                Data Denda
-            </h4>
+        <table class="table align-middle custom-table">
 
-            <div class="table-responsive">
+            <thead>
 
-                <table class="table align-middle">
+                <tr>
 
-                    <thead>
+                    <th>Anggota</th>
+                    <th>Buku</th>
+                    <th>Terlambat</th>
+                    <th>Denda</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @php
+                    $adaDenda = false;
+                @endphp
+
+
+                @foreach($peminjamans as $pinjam)
+
+                    @php
+
+                        $telat = floor(
+                            \Carbon\Carbon::parse(
+                                $pinjam->tanggal_kembali
+                            )->diffInDays(now(), false)
+                        );
+
+                        $denda = 0;
+
+                        if($telat > 0){
+
+                            $denda = $telat * 2000;
+
+                            $adaDenda = true;
+
+                        }
+
+                    @endphp
+
+
+                    @if($telat > 0)
+
                         <tr>
-                            <th>Nama Anggota</th>
-                            <th>Judul Buku</th>
-                            <th>Denda</th>
-                            <th>Baru Bayar</th>
-                            <th>Sisa Denda</th>
-                            <th>Pembayaran</th>
-                            <th>Status</th>
+
+                            {{-- ANGGOTA --}}
+                            <td class="fw-semibold">
+
+                                {{ $pinjam->user->name }}
+
+                            </td>
+
+
+                            {{-- BUKU --}}
+                            <td class="book-title">
+
+                                {{ $pinjam->buku->judul }}
+
+                            </td>
+
+
+                            {{-- TERLAMBAT --}}
+                            <td>
+
+                                <span class="late-text">
+
+                                    {{ $telat }} Hari
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- DENDA --}}
+                            <td>
+
+                                <span class="fine-text">
+
+                                    Rp{{ number_format($denda,0,',','.') }}
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- STATUS --}}
+                            <td>
+
+                                <span class="status-badge">
+
+                                    Belum Bayar
+
+                                </span>
+
+                            </td>
+
                         </tr>
-                    </thead>
 
-                    <tbody>
+                    @endif
 
-                        @forelse($fines as $fine)
+                @endforeach
 
-                            <tr>
 
-                                <td class="fw-semibold">
-                                    {{ $fine->peminjaman->user->name }}
-                                </td>
 
-                                <td>
-                                    {{ $fine->peminjaman->buku->judul }}
-                                </td>
+                {{-- EMPTY --}}
+                @if(!$adaDenda)
 
-                                <td>
-                                    Rp {{ number_format($fine->jumlah_denda) }}
-                                </td>
+                    <tr>
 
-                                <td class="dibayar">
-                                    Rp {{ number_format($fine->dibayar) }}
-                                </td>
+                        <td colspan="5">
 
-                                <td class="sisa">
-                                    Rp {{ number_format($fine->sisa_denda) }}
-                                </td>
+                            <div class="empty-state">
 
-                                {{-- PAYMENT FORM --}}
-                                <td>
-                                    <form class="pay-form d-flex gap-2 align-items-center"
-                                        data-id="{{ $fine->fines_id }}">
+                                <div class="empty-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
 
-                                        @csrf
+                                <h5 class="mb-2">
+                                    Tidak Ada Denda
+                                </h5>
 
-                                        <input type="number"
-                                            name="bayar"
-                                            class="form-control form-control-sm bayar-input"
-                                            style="width:120px;"
-                                            step="1000"
-                                            min="1000"
-                                            placeholder="Cicilan">
+                                <p class="mb-0">
+                                    Semua anggota mengembalikan buku tepat waktu.
+                                </p>
 
-                                        <button type="submit" class="btn btn-sm btn-primary">
-                                            Bayar
-                                        </button>
+                            </div>
 
-                                    </form>
-                                </td>
+                        </td>
 
-                                {{-- STATUS --}}
-                                <td>
-                                    <span class="badge bg-{{ $fine->status_color }}">
-                                        {{ $fine->status_label }}
-                                    </span>
-                                </td>
+                    </tr>
 
-                            </tr>
+                @endif
 
-                        @empty
+            </tbody>
 
-                            <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
-                                    Belum ada data denda.
-                                </td>
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
+        </table>
 
     </div>
 
 </div>
 
-<script>
-document.querySelectorAll('.pay-form').forEach(form => {
 
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
 
-        const id = this.dataset.id;
-        const bayar = this.querySelector('.bayar-input').value;
+<style>
 
-        if (!bayar) {
-            alert('Masukkan nominal');
-            return;
-        }
+.denda-card{
+    border-radius:30px;
+    background:#FFFFFF;
+    padding:32px;
+    border:1px solid #EEE7DF;
+    box-shadow:0 8px 30px rgba(0,0,0,.03);
+}
 
-        const res = await fetch(`/api/denda/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ bayar })
-        });
+/* HEADER */
 
-        const data = await res.json();
+.title-text{
+    color:#243224;
+    font-size:26px;
+}
 
-        if (!res.ok) {
-            alert(data.message || 'Error');
-            return;
-        }
+.subtitle-text{
+    color:#7A7A7A;
+    font-size:15px;
+}
 
-        const row = this.closest('tr');
+.icon-box{
+    width:64px;
+    height:64px;
+    border-radius:20px;
+    background:#F5EFE8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#A56A3D;
+    font-size:28px;
+}
 
-        row.querySelector('.dibayar').innerText = `Rp ${data.dibayar}`;
-        row.querySelector('.sisa').innerText = `Rp ${data.sisa_denda}`;
+/* TABLE */
 
-        const badge = row.querySelector('.badge');
-        badge.className = `badge bg-${data.status_color}`;
-        badge.innerText = data.status_label;
-    });
+.custom-table{
+    margin-bottom:0;
+}
 
-});
-</script>
+.custom-table thead th{
+    background:#F4F6F0;
+    border:none;
+    padding:18px 22px;
+    color:#374151;
+    font-size:15px;
+    font-weight:700;
+}
+
+.custom-table tbody td{
+    padding:24px 22px;
+    border-color:#F1ECE6;
+    vertical-align:middle;
+    color:#2F3B2F;
+    font-size:15px;
+}
+
+.custom-table tbody tr:hover{
+    background:#FCFCFA;
+}
+
+/* TEXT */
+
+.book-title{
+    font-weight:600;
+    color:#2B2B2B;
+}
+
+.late-text{
+    color:#DC2626;
+    font-weight:700;
+}
+
+.fine-text{
+    color:#B45309;
+    font-weight:700;
+}
+
+/* STATUS */
+
+.status-badge{
+    background:#FEE2E2;
+    color:#DC2626;
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    display:inline-block;
+}
+
+/* EMPTY */
+
+.empty-state{
+    padding:70px 20px;
+    text-align:center;
+}
+
+.empty-icon{
+    width:70px;
+    height:70px;
+    margin:auto;
+    margin-bottom:18px;
+    border-radius:50%;
+    background:#F0FDF4;
+    color:#16A34A;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+}
+
+.empty-state h5{
+    color:#2B2B2B;
+    font-weight:700;
+}
+
+.empty-state p{
+    color:#8A8A8A;
+    font-size:15px;
+}
+
+</style>
 
 @endsection

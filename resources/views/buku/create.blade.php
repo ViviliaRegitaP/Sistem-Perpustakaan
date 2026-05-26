@@ -27,32 +27,6 @@
 
                     <div class="row g-3">
 
-                        {{-- KODE BUKU --}}
-                        <div class="col-md-6">
-                            <div class="form-floating">
-
-                                <input type="text"
-                                    name="kode_buku"
-                                    id="kode_buku"
-                                    placeholder="Kode Buku"
-                                    class="form-control @error('kode_buku') is-invalid @enderror"
-                                    value="{{ old('kode_buku') }}"
-                                    required>
-
-                                <label for="kode_buku">
-                                    <i class="bi bi-card-text me-1"></i>
-                                    Kode Buku
-                                </label>
-
-                            </div>
-
-                            @error('kode_buku')
-                                <div class="invalid-feedback d-block">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
                         {{-- TAHUN TERBIT --}}
                         <div class="col-md-6">
                             <label class="form-label">Tahun Terbit</label>
@@ -196,7 +170,7 @@
                                 <button type="submit"
                                     id="btnSaveCreate"
                                     class="btn fw-semibold"
-                                    style="background: var(--secondary,#4F46E5);
+                                    style="background: #8B5E3C;
                                     color:#fff;
                                     border:0;
                                     font-weight:900;">
