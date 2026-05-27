@@ -85,13 +85,28 @@
 
                         }
 
-                        $bg = match($pinjam->status) {
+                        $statusText = $pinjam->status;
+
+                        if(
+                            $hari < 0 &&
+                            $pinjam->status == 'Dipinjam'
+                        ){
+
+                            $statusText = 'Terlambat';
+
+                        }
+
+                        $bg = match($statusText) {
 
                             'Pending' => '#6B7280',
 
                             'Ditolak' => '#DC2626',
 
                             'Dipinjam' => '#9B6B43',
+
+                            'Terlambat' => '#DC2626',
+
+                            'Dikembalikan' => '#16A34A',
 
                             default => '#16A34A',
 
@@ -180,7 +195,7 @@
                                     background:{{ $bg }};
                                 "
                             >
-                                {{ $pinjam->status }}
+                                {{ $statusText }}
                             </span>
 
                         </td>

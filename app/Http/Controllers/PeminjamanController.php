@@ -34,6 +34,36 @@ class PeminjamanController extends Controller
 
 
     // =====================================
+    // DENDA SAYA
+    // =====================================
+
+    public function denda()
+    {
+        $dendas = Peminjaman::with('buku')
+            ->where('user_id', Auth::id())
+            ->where(function ($query) {
+
+                $query->where('status', 'Dipinjam')
+                    ->orWhere('status', 'Dikembalikan');
+
+            })
+            ->get()
+            ->filter(function ($item) {
+
+                return now()->gt($item->tanggal_kembali);
+
+            });
+
+        return view(
+            'anggota.denda',
+            compact('dendas')
+        );
+    }
+
+
+
+
+    // =====================================
     // PINJAM BUKU
     // =====================================
 
