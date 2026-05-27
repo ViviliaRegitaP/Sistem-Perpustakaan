@@ -1,6 +1,35 @@
-# TODO
+# TODO — Penyempurnaan Fitur Peminjaman & Denda
 
-- [ ] Perbaiki perhitungan hari terlambat dan total denda di `kelola-denda` agar tidak menghasilkan desimal.
-- [ ] Samakan logic pembulatan integer antara tampilan (`resources/views/admin/kelola-denda.blade.php`) dan proses penyimpanan (`app/Http/Controllers/FineController.php`).
-- [ ] Pastikan format rupiah tetap rapi dan nilai tampilannya sesuai contoh: 1 Hari → Rp2.000, 5 Hari → Rp10.000, 7 Hari → Rp14.000.
-
+- [ ] Tambah migration tambahan untuk normalisasi nilai kolom `peminjamans.status` ke lowercase:
+  - `Pending` -> `pending`
+  - `Dipinjam` -> `dipinjam`
+  - `Ditolak` -> `ditolak`
+  - `Dikembalikan` -> `dikembalikan`
+- [ ] Update `PeminjamanController`:
+  - tulis status lowercase saat create/approve/reject/kembalikan
+  - implementasikan logic otomatis: jika `status == dipinjam` dan `tanggal_kembali < today` maka ubah ke `terlambat`
+  - panggil logic tersebut sebelum filter/tampilkan data di `kelola()` dan `index()` + logic denda user
+- [ ] Update `FineController`:
+  - pastikan logic denda otomatis hanya untuk peminjaman dengan status `terlambat` (atau update status terlambat terlebih dulu)
+  - sinkronkan filter yang sebelumnya `status == Dipinjam`
+- [ ] Update blade admin `resources/views/admin/kelola-peminjaman.blade.php`:
+  - filter status pakai lowercase + label Indonesia
+  - badge tampil sesuai status DB
+  - aksi:
+    - `pending` -> setujui/tolak
+    - `dipinjam` & `terlambat` -> kembalikan
+    - `dikembalikan` & `ditolak` -> hapus (sesuai perilaku existing)
+- [ ] Update blade user `resources/views/anggota/peminjaman.blade.php`:
+  - badge label mengikuti status DB lowercase
+  - tidak lagi mengandalkan badge-only logic terlambat; gunakan `$pinjam->status === 'terlambat'`
+- [ ] Update blade user form `resources/views/anggota/daftar-buku.blade.php` & `PeminjamanController@storeModal`:
+  - `tanggal_kembali` dihitung server-side (abaikan input request)
+  - hapus validasi/ketergantungan pada `tanggal_kembali` dari request (biar sinkron total)
+- [ ] Update blade admin `resources/views/admin/kelola-denda.blade.php`:
+  - tampilkan hanya data peminjaman dengan status `terlambat`
+- [ ] Jalankan/migrasikan database dan lakukan pengujian manual:
+  - ajukan pinjam -> status `pending`
+  - admin approve -> `dipinjam`
+  - lewat tanggal_kembali -> otomatis jadi `terlambat`
+  - admin kelola-denda hanya untuk `terlambat`
+  - tombol “Lunas” berfungsi mengubah `Fine.status` ke PAID dan tampilan berubah

@@ -129,16 +129,14 @@
                                 @php
                                     $fineStatus = optional($pinjam->fine)->status;
 
+                                    // Sesuai permintaan: cukup tampilkan "Lunas" dan "Belum Bayar"
+                                    // (PARTIALLY_PAID dianggap masih "Belum Bayar")
                                     $statusText = match($fineStatus){
-                                        'UNPAID' => 'Belum Bayar',
-                                        'PARTIALLY_PAID' => 'Dicicil',
                                         'PAID' => 'Lunas',
                                         default => 'Belum Bayar',
                                     };
 
                                     $bg = match($fineStatus){
-                                        'UNPAID' => '#DC2626',
-                                        'PARTIALLY_PAID' => '#D97706',
                                         'PAID' => '#16A34A',
                                         default => '#DC2626',
                                     };

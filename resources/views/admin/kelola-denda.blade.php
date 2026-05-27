@@ -77,7 +77,7 @@
                         $telat = (int) $hariTerlambat;
                     @endphp
 
-                    @if($telat > 0)
+                    @if($pinjam->status === 'terlambat' && $telat > 0)
 
                         @php
                             $adaDenda = true;
@@ -85,10 +85,14 @@
 
                             $fineStatus = $pinjam->fine?->status ?? 'UNPAID';
 
-                            // Status cuma 2: Belum Bayar & Lunas
+                            // Status sesuai permintaan:
+                            // terlambat -> "Lunas" dan "Belum Bayar" ditampilkan sebagai status pembayaran,
+                            // sedangkan aksi hanya tombol "Lunas".
                             $isLunas = $fineStatus === 'PAID';
 
-                            $statusText = $isLunas ? 'Lunas' : 'Belum Bayar';
+                            $statusText = $isLunas
+                                ? 'Lunas'
+                                : 'Belum Bayar';
 
                             $badgeStyle = $isLunas
                                 ? 'background:#DCFCE7; color:#16A34A;'
