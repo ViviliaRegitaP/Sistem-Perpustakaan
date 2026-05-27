@@ -4,6 +4,8 @@
 
 <div class="card border-0 denda-card">
 
+
+
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -47,9 +49,8 @@
                     <th>Buku</th>
                     <th>Terlambat</th>
                     <th>Total Denda</th>
-                    <th>Dibayar</th>
-                    <th>Sisa</th>
                     <th>Status</th>
+
                     <th width="340">Aksi</th>
 
                 </tr>
@@ -65,49 +66,26 @@
                 @foreach($peminjamans as $pinjam)
 
                     @php
-
-                        $hari = floor(
-                            \Carbon\Carbon::now()
-                                ->diffInDays(
-                                    $pinjam->tanggal_kembali,
-                                    false
-                                )
-                        );
-
-                        $telat = abs($hari);
-
+                        $hariTerlambat = \Carbon\Carbon::parse($pinjam->tanggal_kembali)->diffInDays(now());
+                        $telat = max(0, $hariTerlambat);
                     @endphp
 
                     @if($telat > 0)
 
                         @php
-
                             $adaDenda = true;
+                            $denda = $telat * 2000;
 
-                            $fine = $pinjam->fine;
+                            $fineStatus = $pinjam->fine?->status ?? 'UNPAID';
 
-                            $denda = $fine?->jumlah_denda ?? ($telat * 2000);
+                            // Status cuma 2: Belum Bayar & Lunas
+                            $isLunas = $fineStatus === 'PAID';
 
-                            $dibayar = $fine?->dibayar ?? 0;
+                            $statusText = $isLunas ? 'Lunas' : 'Belum Bayar';
 
-                            $sisa = $fine?->sisa_denda ?? $denda;
-
-                            $fineStatus = $fine?->status ?? 'UNPAID';
-
-                            $statusText = match($fineStatus){
-                                'UNPAID' => 'Belum Bayar',
-                                'PARTIALLY_PAID' => 'Dicicil',
-                                'PAID' => 'Lunas',
-                                default => 'Belum Bayar',
-                            };
-
-                            $badgeStyle = match($fineStatus){
-                                'UNPAID' => 'background:#FEE2E2; color:#DC2626;',
-                                'PARTIALLY_PAID' => 'background:#FFEDD5; color:#B45309;',
-                                'PAID' => 'background:#DCFCE7; color:#16A34A;',
-                                default => 'background:#FEE2E2; color:#DC2626;',
-                            };
-
+                            $badgeStyle = $isLunas
+                                ? 'background:#DCFCE7; color:#16A34A;'
+                                : 'background:#FEE2E2; color:#DC2626;';
                         @endphp
 
                         <tr>
@@ -136,136 +114,49 @@
                                 </span>
                             </td>
 
-                            {{-- DIBAYAR --}}
-                            <td>
-                                Rp{{ number_format($dibayar,0,',','.') }}
-                            </td>
-
-                            {{-- SISA --}}
-                            <td>
-                                Rp{{ number_format($sisa,0,',','.') }}
-                            </td>
-
                             {{-- STATUS --}}
                             <td>
-
                                 <span
                                     class="status-badge"
                                     style="{{ $badgeStyle }}"
                                 >
                                     {{ $statusText }}
                                 </span>
-
                             </td>
 
                             {{-- AKSI --}}
                             <td>
 
-                                @if($fine)
+                                @php
+                                    $status = $pinjam->fine?->status ?? 'UNPAID';
+                                    $sudahDibayar = $status === 'PAID';
+                                @endphp
 
-                                    <div class="d-flex flex-column gap-2">
-
-                                        {{-- LUNAS --}}
-                                        <form
-                                            method="POST"
-                                            action="{{ route('denda.update', $fine->fines_id) }}"
-                                        >
-
-                                            @csrf
-                                            @method('PUT')
-
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value="PAID"
-                                            >
-
-                                            <button
-                                                type="submit"
-                                                class="btn action-btn lunas-btn"
-                                            >
-                                                Lunas
-                                            </button>
-
-                                        </form>
-
-                                        {{-- BELUM BAYAR --}}
-                                        <form
-                                            method="POST"
-                                            action="{{ route('denda.update', $fine->fines_id) }}"
-                                        >
-
-                                            @csrf
-                                            @method('PUT')
-
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value="UNPAID"
-                                            >
-
-                                            <button
-                                                type="submit"
-                                                class="btn action-btn unpaid-btn"
-                                            >
-                                                Belum Bayar
-                                            </button>
-
-                                        </form>
-
-                                        {{-- CICIL --}}
-                                        <form
-                                            method="POST"
-                                            action="{{ route('denda.update', $fine->fines_id) }}"
-                                        >
-
-                                            @csrf
-                                            @method('PUT')
-
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value="PARTIALLY_PAID"
-                                            >
-
-                                            <div class="d-flex gap-2">
-
-                                                <input
-                                                    type="number"
-                                                    name="dibayar"
-                                                    min="1"
-                                                    max="{{ $denda }}"
-                                                    required
-                                                    class="form-control cicil-input"
-                                                    placeholder="Nominal"
-                                                >
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn action-btn cicil-btn"
-                                                >
-                                                    Cicil
-                                                </button>
-
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-
+                                @if($sudahDibayar)
+                                    <span class="text-success fw-semibold">Sudah Dibayar</span>
                                 @else
+                                    <form
+                                        method="POST"
+                                        action="{{ route('denda.update', $pinjam->fine?->fines_id) }}"
+                                    >
+                                        @csrf
+                                        @method('PUT')
 
-                                    <span class="text-muted">
-                                        Belum ada data denda
-                                    </span>
+                                        <input type="hidden" name="status" value="PAID">
 
+                                        <button type="submit" class="btn action-btn lunas-btn">
+                                            Lunas
+                                        </button>
+                                    </form>
                                 @endif
 
                             </td>
 
+
                         </tr>
 
                     @endif
+
 
                 @endforeach
 
@@ -307,7 +198,6 @@
 </div>
 
 <style>
-
 .denda-card{
     border-radius:30px;
     background:#FFFFFF;

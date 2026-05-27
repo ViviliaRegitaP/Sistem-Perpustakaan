@@ -63,7 +63,15 @@
     Masuk untuk mengakses Lentera Pustaka
 </p>
 
+{{-- Flash status (mis. setelah register) --}}
+@if (session('status'))
+    <div class="mb-4 text-center font-medium text-sm text-green-600">
+        {{ session('status') }}
+    </div>
+@endif
+
 <form method="POST" action="{{ route('login') }}">
+
 
     @csrf
 

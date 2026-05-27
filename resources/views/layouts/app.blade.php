@@ -292,9 +292,19 @@
                     Kelola Denda
                 </a>
 
+                <a
+                    href="/users"
+                    class="{{ request()->is('users*') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-people"></i>
+                    Kelola User
+                </a>
+
+
             @endif
 
             {{-- MENU ANGGOTA --}}
+
             @if(Auth::user()->email != 'admin@perpus.com')
 
                 <a

@@ -74,7 +74,12 @@ class PeminjamanController extends Controller
 
             'buku_id' => 'required|exists:bukus,id',
 
+            'tanggal_pinjam' => 'required|date',
+
+            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
+
         ]);
+
 
 
 
@@ -111,10 +116,28 @@ class PeminjamanController extends Controller
         // TANGGAL
         // =====================================
 
-        $tanggalPinjam = Carbon::today();
+        // Ambil tanggal dari form user (dan normalisasi ke awal hari)
+        $tanggalPinjam = Carbon::parse($request->input('tanggal_pinjam'))->startOfDay();
+        $tanggalKembali = Carbon::parse($request->input('tanggal_kembali'))->startOfDay();
 
-        $tanggalKembali = Carbon::today()
-                                ->addDays(7);
+        // Pastikan tanggal tidak boleh mundur dan rentang maksimal 7 hari
+        if ($tanggalPinjam->lt(Carbon::today())) {
+
+            return redirect('/daftar-buku')
+                ->with('error', 'Tanggal pinjam tidak boleh ke belakang.');
+
+        }
+
+        $selisihHari = $tanggalPinjam->diffInDays($tanggalKembali);
+
+        if ($selisihHari < 1 || $selisihHari > 7) {
+
+            return redirect('/daftar-buku')
+                ->with('error', 'Lama pinjam harus antara 1 sampai 7 hari.');
+
+        }
+
+
 
 
 
