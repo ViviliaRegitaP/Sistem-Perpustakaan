@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use Illuminate\Support\Facades\DB;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 
@@ -14,10 +15,10 @@ class BukuController extends Controller
     public function index()
     {
         $bukus = Buku::with('kategori')
-                    ->latest()
+                    ->orderBy('id', 'asc')
                     ->paginate(10);
 
-        return view('buku.index', compact('bukus'));
+        return view('buku.index', compact('bukus'))->with('bukus', $bukus);
     }
 
     /**
@@ -44,21 +45,20 @@ class BukuController extends Controller
             'kategori_id' => 'required|exists:kategoris,id',
         ]);
 
-        // Ambil buku terakhir
-        $lastBook = Buku::latest()->first();
+        // Generate kode buku (urutkan berdasarkan nomor maksimal dari kode_buku)
+        // Pakai transaction untuk mengurangi kemungkinan race condition.
+        $kode = DB::transaction(function () use ($validated) {
 
-        // Generate nomor kode buku
-        $number = $lastBook
-            ? ((int) substr($lastBook->kode_buku, 2)) + 1
-            : 1;
+            $maxNumber = Buku::selectRaw("MAX(CAST(SUBSTRING(kode_buku, 3) AS UNSIGNED)) AS max_num")
+                ->value('max_num');
 
-        // Format kode buku
-        $kode = 'BK' . str_pad($number, 3, '0', STR_PAD_LEFT);
+            $nextNumber = ($maxNumber ?? 0) + 1;
 
-        // Tambahkan kode buku ke validated data
+            return 'BK' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        });
+
         $validated['kode_buku'] = $kode;
 
-        // Simpan ke database
         Buku::create($validated);
 
         return redirect()->route('bukus.index')

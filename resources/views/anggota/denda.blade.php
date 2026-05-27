@@ -67,11 +67,18 @@
 
                     @php
 
-                        $telat = floor(
-                            \Carbon\Carbon::parse(
-                                $pinjam->tanggal_kembali
-                            )->diffInDays(now(), false)
+
+                        $hari = floor(
+                            \Carbon\Carbon::now()
+                                ->diffInDays(
+                                    $pinjam->tanggal_kembali,
+                                    false
+                                )
                         );
+
+
+                        $telat = abs($hari);
+
 
                         $denda = 0;
 
@@ -118,11 +125,30 @@
 
                             <td class="text-center">
 
+                                @php
+                                    $fineStatus = optional($pinjam->fine)->status;
+
+                                    $statusText = match($fineStatus){
+                                        'UNPAID' => 'Belum Bayar',
+                                        'PARTIALLY_PAID' => 'Dicicil',
+                                        'PAID' => 'Lunas',
+                                        default => 'Belum Bayar',
+                                    };
+
+                                    $bg = match($fineStatus){
+                                        'UNPAID' => '#DC2626',
+                                        'PARTIALLY_PAID' => '#D97706',
+                                        'PAID' => '#16A34A',
+                                        default => '#DC2626',
+                                    };
+
+                                @endphp
+
                                 <span
                                     class="badge rounded-pill status-badge"
-                                    style="background:#DC2626;"
+                                    style="background:{{ $bg }};"
                                 >
-                                    Belum Bayar
+                                    {{ $statusText }}
                                 </span>
 
                             </td>

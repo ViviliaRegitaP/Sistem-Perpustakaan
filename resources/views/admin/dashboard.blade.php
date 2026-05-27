@@ -130,7 +130,7 @@
 
                     <tr>
 
-                        <th>Kode</th>
+<th>Kode</th>
                         <th>Judul</th>
                         <th>Penulis</th>
                         <th>Penerbit</th>
@@ -144,7 +144,7 @@
 
             <tbody>
 
-                @foreach(\App\Models\Buku::latest()->take(5)->get() as $buku)
+                @foreach(\App\Models\Buku::orderBy('id', 'asc')->get() as $buku)
 
                     <tr>
 

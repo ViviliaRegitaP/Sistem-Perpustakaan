@@ -5,16 +5,29 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\FineController;
 
 use App\Models\Buku;
 use App\Models\Peminjaman;
 use App\Models\User;
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECT AWAL
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return redirect('/dashboard');
 });
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/dashboard', function () {
 
@@ -32,7 +45,19 @@ Route::get('/dashboard', function () {
 
 })->middleware('auth')->name('dashboard');
 
+/*
+|--------------------------------------------------------------------------
+| ROUTE USER / ANGGOTA
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | DAFTAR BUKU (ANGGOTA)
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/daftar-buku', function () {
 
@@ -44,41 +69,116 @@ Route::middleware('auth')->group(function () {
 
     })->name('daftar.buku');
 
-    Route::post('/pinjam/buku', [PeminjamanController::class, 'storeModal'])
-        ->name('pinjam.buku');
+    /*
+    |--------------------------------------------------------------------------
+    | PINJAM BUKU
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('/peminjaman', [PeminjamanController::class, 'index'])
-        ->name('peminjaman');
+    Route::post(
+        '/pinjam/buku',
+        [PeminjamanController::class, 'storeModal']
+    )->name('pinjam.buku');
 
-    Route::get('/denda', [\App\Http\Controllers\FineController::class, 'userIndex'])
-        ->name('denda');
+    /*
+    |--------------------------------------------------------------------------
+    | PEMINJAMAN USER
+    |--------------------------------------------------------------------------
+    */
 
-    // CRUD Buku
-    Route::resource('bukus', BukuController::class);
+    Route::get(
+        '/peminjaman',
+        [PeminjamanController::class, 'index']
+    )->name('peminjaman');
 
-    Route::resource('kategori', KategoriController::class);
+    /*
+    |--------------------------------------------------------------------------
+    | DENDA USER
+    |--------------------------------------------------------------------------
+    */
 
+    Route::get(
+        '/denda',
+        [FineController::class, 'userIndex']
+    )->name('denda');
 
 });
 
+/*
+|--------------------------------------------------------------------------
+| ROUTE ADMIN
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
 
-    Route::get('/kelola-peminjaman', [PeminjamanController::class, 'kelola'])
-        ->name('kelola.peminjaman');
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD BUKU (ADMIN) — bukus.index mengarah ke view admin
+    |--------------------------------------------------------------------------
+    */
 
-    Route::post('/peminjaman/{id}/setujui', [PeminjamanController::class, 'approve'])
-        ->name('peminjaman.setujui');
+    Route::resource('bukus', BukuController::class);
 
-    Route::post('/peminjaman/{id}/tolak', [PeminjamanController::class, 'reject'])
-        ->name('peminjaman.tolak');
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD KATEGORI
+    |--------------------------------------------------------------------------
+    */
 
-    Route::post('/kembalikan/{id}', [PeminjamanController::class, 'kembalikan'])
-        ->name('peminjaman.kembalikan');
+    Route::resource('kategori', KategoriController::class);
 
-    Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])
-        ->name('peminjaman.destroy');
+    /*
+    |--------------------------------------------------------------------------
+    | KELOLA PEMINJAMAN
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('/kelola-denda', [\App\Http\Controllers\FineController::class, 'adminIndex'])
-        ->name('kelola.denda');
+    Route::get(
+        '/kelola-peminjaman',
+        [PeminjamanController::class, 'kelola']
+    )->name('kelola.peminjaman');
+
+    Route::post(
+        '/peminjaman/{id}/setujui',
+        [PeminjamanController::class, 'approve']
+    )->name('peminjaman.setujui');
+
+    Route::post(
+        '/peminjaman/{id}/tolak',
+        [PeminjamanController::class, 'reject']
+    )->name('peminjaman.tolak');
+
+    Route::post(
+        '/kembalikan/{id}',
+        [PeminjamanController::class, 'kembalikan']
+    )->name('peminjaman.kembalikan');
+
+    Route::delete(
+        '/peminjaman/{id}',
+        [PeminjamanController::class, 'destroy']
+    )->name('peminjaman.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KELOLA DENDA
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/kelola-denda',
+        [FineController::class, 'adminIndex']
+    )->name('kelola.denda');
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE STATUS DENDA
+    |--------------------------------------------------------------------------
+    */
+
+    Route::put(
+        '/denda/{fines_id}',
+        [FineController::class, 'update']
+    )->name('denda.update');
 
 });

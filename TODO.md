@@ -1,5 +1,13 @@
-- [ ] Memperbarui `app/Http/Controllers/FineController.php` agar query denda hanya berdasarkan `tanggal_kembali < sekarang` tanpa filter status
-- [ ] Memastikan Blade `resources/views/anggota/denda.blade.php` tetap pakai perhitungan Carbon diffInDays dan UI tidak berubah
-- [ ] Memastikan Blade `resources/views/admin/kelola-denda.blade.php` tetap pakai perhitungan Carbon diffInDays dan UI tidak berubah
-- [ ] Jalankan verifikasi manual: buka `/denda` dan `/kelola-denda` untuk memastikan data muncul saat tanggal_kembali sudah lewat
+# TODO - Sistem Perpustakaan
+
+- [x] Validasi penyebab dashboard admin cuma tampil 5 data (cek view/controller/routes)
+- [x] Tambahkan fitur edit status denda admin (UI dropdown + simpan)
+- [x] Tambahkan endpoint update status denda (API POST /api/denda/{fines_id})
+- [ ] Pastikan dashboard admin menampilkan semua buku (tidak dibatasi 5)
+- [ ] Pastikan urutan buku pada dashboard sesuai ID terkecil (BK001 dulu)
+- [ ] Jalankan `php artisan view:clear` dan coba refresh halaman
+
+- [ ] Uji submit status denda admin (UNPAID/PARTIALLY_PAID/PAID)
+
+
 
