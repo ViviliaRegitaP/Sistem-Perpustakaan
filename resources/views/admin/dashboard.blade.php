@@ -128,23 +128,23 @@
 
             <thead>
 
-                    <tr>
+                <tr>
 
-<th>Kode</th>
-                        <th>Judul</th>
-                        <th>Penulis</th>
-                        <th>Penerbit</th>
-                        <th>Tahun</th>
-                        <th>Kategori</th>
-                        <th>Stok</th>
+                    <th>Kode</th>
+                    <th>Judul</th>
+                    <th>Penulis</th>
+                    <th>Penerbit</th>
+                    <th>Tahun</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
 
-                    </tr>
+                </tr>
 
             </thead>
 
             <tbody>
 
-                @foreach(\App\Models\Buku::orderBy('id', 'asc')->get() as $buku)
+                @foreach(\App\Models\Buku::orderBy('id', 'asc')->take(5)->get() as $buku)
 
                     <tr>
 
@@ -182,7 +182,6 @@
 
                         </td>
 
-
                     </tr>
 
                 @endforeach
@@ -196,7 +195,8 @@
 </div>
 
 <style>
-/* Admin Dashboard (tema cream/beige, coklat soft) */
+
+/* Admin Dashboard */
 
 a.btn-primary-custom{
     background: var(--gradient-btn);

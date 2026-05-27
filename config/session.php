@@ -199,10 +199,14 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
+'same_site' => env('SESSION_SAME_SITE', 'lax'),
+
+    // Fix 419 Page Expired yang sering terjadi di local/dev ketika browser menolak cookie cross-site.
+    // Default tetap lax; ubah aman via .env bila perlu.
 
     /*
     |--------------------------------------------------------------------------
+
     | Partitioned Cookies
     |--------------------------------------------------------------------------
     |

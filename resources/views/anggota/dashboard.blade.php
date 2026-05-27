@@ -49,8 +49,6 @@
 
 </div>
 
-
-
 {{-- BUKU TERBARU --}}
 <div class="dashboard-card">
 
@@ -68,7 +66,6 @@
 
         </div>
 
-        {{-- YANG DIBENERIN CUMA INI --}}
         <a href="/daftar-buku"
            class="btn-lihat">
 
@@ -85,23 +82,24 @@
 
             <thead>
 
-                    <tr>
+                <tr>
 
-                        <th>Kode</th>
-                        <th>Judul</th>
-                        <th>Penulis</th>
-                        <th>Penerbit</th>
-                        <th>Tahun</th>
-                        <th>Kategori</th>
-                        <th>Stok</th>
+                    <th>Kode</th>
+                    <th>Judul</th>
+                    <th>Penulis</th>
+                    <th>Penerbit</th>
+                    <th>Tahun</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
 
-                    </tr>
+                </tr>
 
             </thead>
 
             <tbody>
 
-                @foreach(\App\Models\Buku::latest()->take(5)->get() as $buku)
+                @foreach(\App\Models\Buku::orderBy('id', 'asc')->get() as $buku)
+
 
                     <tr>
 
@@ -125,7 +123,7 @@
                             {{ $buku->tahun_terbit }}
                         </td>
 
-                         <td>
+                        <td>
                             {{ optional($buku->kategori)->nama_kategori ?? '-' }}
                         </td>
 
@@ -138,7 +136,6 @@
                             </span>
 
                         </td>
-
 
                     </tr>
 

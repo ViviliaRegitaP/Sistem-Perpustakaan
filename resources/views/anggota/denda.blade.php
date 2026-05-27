@@ -63,9 +63,10 @@
                     $adaDenda = false;
                 @endphp
 
-                @foreach($peminjamans as $pinjam)
+                @foreach($telatPeminjamans as $pinjam)
 
                     @php
+
 
 
                         $hari = floor(
@@ -276,4 +277,7 @@
 
 </style>
 
+
+
 @endsection
+

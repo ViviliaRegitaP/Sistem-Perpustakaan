@@ -312,10 +312,12 @@
                             type="date"
                             id="tanggal_pinjam"
                             name="tanggal_pinjam"
-                            readonly
                             class="form-control rounded-4"
                             value="{{ date('Y-m-d') }}"
+                            min="{{ date('Y-m-d') }}"
+                            required
                         >
+                        <div class="text-muted small mt-2">Tidak boleh memilih tanggal ke belakang.</div>
                     </div>
 
                     <div class="mb-3">
@@ -340,9 +342,11 @@
                             name="tanggal_kembali"
                             id="tanggal_kembali"
                             class="form-control rounded-4"
-                            readonly
+                            min="{{ date('Y-m-d') }}"
+                            required
                         >
                     </div>
+
 
                     <div class="p-3 rounded-4 mb-4" style="background:#FFF7ED; border:1px solid #FED7AA;">
                         <ul class="mb-0 text-muted small" style="padding-left:18px;">
@@ -392,7 +396,57 @@
             const mm = String(date.getMonth() + 1).padStart(2, '0');
             const dd = String(date.getDate()).padStart(2, '0');
 
-            document.getElementById('tanggal_kembali').value = `${yyyy}-${mm}-${dd}`;
+            const kembaliEl = document.getElementById('tanggal_kembali');
+            kembaliEl.value = `${yyyy}-${mm}-${dd}`;
+
+            // Pastikan tanggal_kembali tidak boleh sebelum hari ini
+            const today = document.getElementById('tanggal_kembali').getAttribute('min');
+            if (today && kembaliEl.value < today) {
+                kembaliEl.value = today;
+            }
+        };
+
+        // Jika user mengubah tanggal_kembali, hitung ulang lama_pinjam dan validasi
+        window.onTanggalKembaliChange = function () {
+            const pinjam = document.getElementById('tanggal_pinjam').value;
+            const kembali = document.getElementById('tanggal_kembali').value;
+
+            if (!pinjam || !kembali) return;
+
+            const [py, pm, pd] = pinjam.split('-').map(Number);
+            const [ry, rm, rd] = kembali.split('-').map(Number);
+
+            const pinjamDate = new Date(py, pm - 1, pd);
+            const kembaliDate = new Date(ry, rm - 1, rd);
+
+            // beda hari (>=0). Jika - (kembali < pinjam), paksa agar minimal 1 hari setelah pinjam
+            let diff = Math.floor((kembaliDate - pinjamDate) / (1000 * 60 * 60 * 24));
+
+            if (Number.isNaN(diff)) diff = 1;
+            if (diff < 1) {
+                diff = 1;
+
+                // set tanggal_kembali = pinjam + 1
+                const forced = new Date(pinjamDate);
+                forced.setDate(forced.getDate() + diff);
+                const yyyy = forced.getFullYear();
+                const mm = String(forced.getMonth() + 1).padStart(2, '0');
+                const dd = String(forced.getDate()).padStart(2, '0');
+                document.getElementById('tanggal_kembali').value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            if (diff > 7) {
+                diff = 7;
+                // set tanggal_kembali = pinjam + 7
+                const forced = new Date(pinjamDate);
+                forced.setDate(forced.getDate() + diff);
+                const yyyy = forced.getFullYear();
+                const mm = String(forced.getMonth() + 1).padStart(2, '0');
+                const dd = String(forced.getDate()).padStart(2, '0');
+                document.getElementById('tanggal_kembali').value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            document.getElementById('lama_pinjam').value = diff;
         };
 
         window.openModal = function (id, judul) {
@@ -404,12 +458,34 @@
             pinjamModal.show();
         };
 
+        // Set awal tanggal kembali berdasarkan tanggal pinjam default
         window.setTanggalKembali();
 
         const lamaPinjamInput = document.getElementById('lama_pinjam');
         if (lamaPinjamInput) {
             lamaPinjamInput.addEventListener('input', window.setTanggalKembali);
         }
+
+        const tanggalPinjamEl = document.getElementById('tanggal_pinjam');
+        const tanggalKembaliEl = document.getElementById('tanggal_kembali');
+
+        // Jika user mengubah tanggal pinjam, hitung ulang tanggal kembali
+        if (tanggalPinjamEl) {
+            tanggalPinjamEl.addEventListener('change', () => {
+                // update min tanggal kembali mengikuti tanggal pinjam
+                const today = tanggalPinjamEl.getAttribute('min');
+                if (today) {
+                    tanggalKembaliEl.setAttribute('min', today);
+                }
+                window.setTanggalKembali();
+            });
+        }
+
+        // Jika user mengubah tanggal kembali, sesuaikan lama_pinjam otomatis
+        if (tanggalKembaliEl) {
+            tanggalKembaliEl.addEventListener('change', window.onTanggalKembaliChange);
+        }
+
     });
 </script>
 
