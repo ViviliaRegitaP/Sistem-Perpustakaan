@@ -66,8 +66,15 @@
                 @foreach($peminjamans as $pinjam)
 
                     @php
-                        $hariTerlambat = \Carbon\Carbon::parse($pinjam->tanggal_kembali)->diffInDays(now());
-                        $telat = max(0, $hariTerlambat);
+                        $hariTerlambat = max(
+                            0,
+                            floor(
+                                \Carbon\Carbon::parse($pinjam->tanggal_kembali)
+                                    ->diffInDays(now())
+                            )
+                        );
+
+                        $telat = (int) $hariTerlambat;
                     @endphp
 
                     @if($telat > 0)

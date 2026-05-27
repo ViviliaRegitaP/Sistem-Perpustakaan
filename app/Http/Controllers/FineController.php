@@ -28,8 +28,14 @@ class FineController extends Controller
 
         // Auto-create/auto-update denda untuk peminjaman yang terlambat
         foreach ($telatPeminjamans as $pinjam) {
-            $telat = now()->diffInDays($pinjam->tanggal_kembali);
-            $telat = max(0, $telat);
+            $hariTerlambat = max(
+                0,
+                floor(
+                    now()->diffInDays($pinjam->tanggal_kembali)
+                )
+            );
+
+            $telat = (int) $hariTerlambat;
             $jumlahDenda = $telat * 2000;
 
             if (!$pinjam->fine) {
@@ -89,8 +95,14 @@ class FineController extends Controller
 
         // Auto-create/auto-update denda untuk user yang terlambat
         foreach ($telatPeminjamans as $pinjam) {
-            $telat = now()->diffInDays($pinjam->tanggal_kembali);
-            $telat = max(0, $telat);
+            $hariTerlambat = max(
+                0,
+                floor(
+                    now()->diffInDays($pinjam->tanggal_kembali)
+                )
+            );
+
+            $telat = (int) $hariTerlambat;
             $jumlahDenda = $telat * 2000;
 
             if (!$pinjam->fine) {
@@ -238,3 +250,4 @@ class FineController extends Controller
             );
     }
 }
+

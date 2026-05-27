@@ -1,8 +1,6 @@
-- [ ] Buat ulang tabel admin `kelola-denda` sesuai spesifikasi (kolom dibayar/sisa dihapus; kolom sesuai: Anggota, Buku, Terlambat, Total Denda, Status, Aksi).
-- [ ] Pastikan `Total Denda` selalu dihitung ulang: `hariTerlambat * 2000` dari `tanggal_kembali` (tanpa bergantung `fine->jumlah_denda`).
-- [ ] Status hanya 2: Belum Bayar (badge merah) dan Lunas (badge hijau).
-- [ ] Hapus tombol Cicil, hapus status ganda, dan hapus logika yang bertumpuk.
-- [ ] Aksi hanya: tampil tombol `Lunas` bila belum lunas, jika lunas tampil text `Sudah Dibayar`.
-- [ ] Pastikan 1 row hanya ada 1 badge status.
-- [ ] Jalankan pengecekan cepat: tidak ada colspan/tabel rusak dan view tidak error.
+# TODO
+
+- [ ] Perbaiki perhitungan hari terlambat dan total denda di `kelola-denda` agar tidak menghasilkan desimal.
+- [ ] Samakan logic pembulatan integer antara tampilan (`resources/views/admin/kelola-denda.blade.php`) dan proses penyimpanan (`app/Http/Controllers/FineController.php`).
+- [ ] Pastikan format rupiah tetap rapi dan nilai tampilannya sesuai contoh: 1 Hari → Rp2.000, 5 Hari → Rp10.000, 7 Hari → Rp14.000.
 
