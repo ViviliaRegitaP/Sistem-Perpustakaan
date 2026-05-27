@@ -19,10 +19,13 @@ class PeminjamanController extends Controller
 
     public function index()
     {
+        // Pastikan status "terlambat" sudah konsisten di DB
+        $this->syncTerlambatStatus();
+
         $peminjamans = Peminjaman::with('buku')
-                        ->where('user_id', Auth::id())
-                        ->latest()
-                        ->get();
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
         return view(
             'anggota.peminjaman',
@@ -39,20 +42,14 @@ class PeminjamanController extends Controller
 
     public function denda()
     {
+        // Pastikan status "terlambat" sudah konsisten di DB
+        $this->syncTerlambatStatus();
+
         $dendas = Peminjaman::with('buku')
             ->where('user_id', Auth::id())
-            ->where(function ($query) {
-
-                $query->where('status', 'Dipinjam')
-                    ->orWhere('status', 'Dikembalikan');
-
-            })
-            ->get()
-            ->filter(function ($item) {
-
-                return now()->gt($item->tanggal_kembali);
-
-            });
+            ->where('status', 'terlambat')
+            ->latest()
+            ->get();
 
         return view(
             'anggota.denda',
@@ -76,7 +73,7 @@ class PeminjamanController extends Controller
 
             'tanggal_pinjam' => 'required|date',
 
-            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
+            'lama_pinjam' => 'required|integer|min:1|max:7',
 
         ]);
 
@@ -118,9 +115,7 @@ class PeminjamanController extends Controller
 
         // Ambil tanggal dari form user (dan normalisasi ke awal hari)
         $tanggalPinjam = Carbon::parse($request->input('tanggal_pinjam'))->startOfDay();
-        $tanggalKembali = Carbon::parse($request->input('tanggal_kembali'))->startOfDay();
 
-        // Pastikan tanggal tidak boleh mundur dan rentang maksimal 7 hari
         if ($tanggalPinjam->lt(Carbon::today())) {
 
             return redirect('/daftar-buku')
@@ -128,9 +123,13 @@ class PeminjamanController extends Controller
 
         }
 
-        $selisihHari = $tanggalPinjam->diffInDays($tanggalKembali);
+        $lamaPinjam = (int) $request->input('lama_pinjam', 1);
 
-        if ($selisihHari < 1 || $selisihHari > 7) {
+        // sinkron tanggal_kembali melalui lama_pinjam
+        $tanggalKembali = $tanggalPinjam->copy()->addDays($lamaPinjam)->startOfDay();
+
+        // Validasi rentang maksimal 7 hari (tambahan pengaman)
+        if ($lamaPinjam < 1 || $lamaPinjam > 7) {
 
             return redirect('/daftar-buku')
                 ->with('error', 'Lama pinjam harus antara 1 sampai 7 hari.');
@@ -156,7 +155,7 @@ class PeminjamanController extends Controller
 
             'tanggal_kembali' => $tanggalKembali,
 
-            'status' => 'Pending',
+            'status' => 'pending',
 
         ]);
 
@@ -180,7 +179,7 @@ class PeminjamanController extends Controller
     public function approve($id)
     {
         $pinjam = Peminjaman::with('buku')
-                    ->findOrFail($id);
+            ->findOrFail($id);
 
 
 
@@ -189,7 +188,7 @@ class PeminjamanController extends Controller
         // VALIDASI STATUS
         // =====================================
 
-        if ($pinjam->status !== 'Pending') {
+        if ($pinjam->status !== 'pending') {
 
             return redirect('/kelola-peminjaman')
                 ->with(
@@ -222,7 +221,7 @@ class PeminjamanController extends Controller
         DB::transaction(function () use ($pinjam) {
 
             // STATUS DIPINJAM
-            $pinjam->status = 'Dipinjam';
+            $pinjam->status = 'dipinjam';
 
             $pinjam->save();
 
@@ -256,7 +255,7 @@ class PeminjamanController extends Controller
 
 
 
-        if ($pinjam->status !== 'Pending') {
+        if ($pinjam->status !== 'pending') {
 
             return redirect('/kelola-peminjaman')
                 ->with(
@@ -270,7 +269,7 @@ class PeminjamanController extends Controller
 
 
         // STATUS DITOLAK
-        $pinjam->status = 'Ditolak';
+        $pinjam->status = 'ditolak';
 
         $pinjam->save();
 
@@ -293,34 +292,36 @@ class PeminjamanController extends Controller
 
     public function kelola()
     {
+        // Pastikan status "terlambat" sudah konsisten di DB sebelum difilter
+        $this->syncTerlambatStatus();
+
         $query = Peminjaman::with([
-                    'user',
-                    'buku'
-                ])->latest();
-
-
-
+            'user',
+            'buku'
+        ])->latest();
 
         // =====================================
         // FILTER STATUS
         // =====================================
 
-        if(request('status')){
+        if (request('status')) {
 
-            $query->where(
-                'status',
-                request('status')
-            );
+            $status = request('status');
 
+            // Normalisasi parameter query (dari blade yang masih pakai label kapital)
+            $status = match ($status) {
+                'Pending' => 'pending',
+                'Dipinjam' => 'dipinjam',
+                'Dikembalikan' => 'dikembalikan',
+                'Ditolak' => 'ditolak',
+                'Terlambat' => 'terlambat',
+                default => strtolower($status),
+            };
+
+            $query->where('status', $status);
         }
 
-
-
-
         $peminjamans = $query->get();
-
-
-
 
         return view(
             'admin.kelola-peminjaman',
@@ -343,10 +344,10 @@ class PeminjamanController extends Controller
 
 
         // =====================================
-        // HANYA STATUS DIPINJAM
+        // HANYA STATUS DIPINJAM / TERLAMBAT
         // =====================================
 
-        if ($pinjam->status !== 'Dipinjam') {
+        if (!in_array($pinjam->status, ['dipinjam', 'terlambat'], true)) {
 
             return redirect('/kelola-peminjaman')
                 ->with(
@@ -363,7 +364,7 @@ class PeminjamanController extends Controller
         // STATUS DIKEMBALIKAN
         // =====================================
 
-        $pinjam->status = 'Dikembalikan';
+        $pinjam->status = 'dikembalikan';
 
         $pinjam->save();
 
@@ -445,8 +446,8 @@ class PeminjamanController extends Controller
         // =====================================
 
         if (
-            $pinjam->status != 'Dikembalikan' &&
-            $pinjam->status != 'Ditolak'
+            $pinjam->status != 'dikembalikan' &&
+            $pinjam->status != 'ditolak'
         ) {
 
             return redirect('/kelola-peminjaman')
@@ -470,6 +471,18 @@ class PeminjamanController extends Controller
                 'success',
                 'Data berhasil dihapus.'
             );
+    }
+
+    /**
+     * Sync otomatis status peminjaman menjadi "terlambat"
+     * ketika status masih dipinjam dan tanggal_kembali sudah lewat.
+     */
+    private function syncTerlambatStatus(): void
+    {
+        Peminjaman::query()
+            ->where('status', 'dipinjam')
+            ->where('tanggal_kembali', '<', now()->toDateString())
+            ->update(['status' => 'terlambat']);
     }
 
 }

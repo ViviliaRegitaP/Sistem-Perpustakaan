@@ -86,7 +86,7 @@
         </a>
 
         <a
-            href="/kelola-peminjaman?status=Pending"
+            href="/kelola-peminjaman?status=pending"
             class="btn rounded-pill px-3 py-2"
             style="
                 background:#FFF4DB;
@@ -96,11 +96,11 @@
                 border:none;
             "
         >
-            Pending
+            pending
         </a>
 
         <a
-            href="/kelola-peminjaman?status=Dipinjam"
+            href="/kelola-peminjaman?status=dipinjam"
             class="btn rounded-pill px-3 py-2"
             style="
                 background:#F3E7DE;
@@ -110,11 +110,11 @@
                 border:none;
             "
         >
-            Dipinjam
+            dipinjam
         </a>
 
         <a
-            href="/kelola-peminjaman?status=Dikembalikan"
+            href="/kelola-peminjaman?status=dikembalikan"
             class="btn rounded-pill px-3 py-2"
             style="
                 background:#E9F8EE;
@@ -124,11 +124,11 @@
                 border:none;
             "
         >
-            Dikembalikan
+            dikembalikan
         </a>
 
         <a
-            href="/kelola-peminjaman?status=Ditolak"
+            href="/kelola-peminjaman?status=ditolak"
             class="btn rounded-pill px-3 py-2"
             style="
                 background:#FDECEC;
@@ -138,7 +138,21 @@
                 border:none;
             "
         >
-            Ditolak
+            ditolak
+        </a>
+
+        <a
+            href="/kelola-peminjaman?status=terlambat"
+            class="btn rounded-pill px-3 py-2"
+            style="
+                background:#FDE2E2;
+                color:#DC2626;
+                font-size:14px;
+                font-weight:600;
+                border:none;
+            "
+        >
+            terlambat
         </a>
 
     </div>
@@ -209,34 +223,30 @@
                         @forelse($peminjamans as $pinjam)
 
                             @php
+                                $statusText = match($pinjam->status) {
+                                    'pending' => 'pending',
+                                    'dipinjam' => 'dipinjam',
+                                    'terlambat' => 'terlambat',
+                                    'dikembalikan' => 'dikembalikan',
+                                    'ditolak' => 'ditolak',
+                                    default => $pinjam->status,
+                                };
 
-                                $statusText = $pinjam->status;
+                                $bg = match($pinjam->status) {
 
-                                if(
-                                    now()->gt($pinjam->tanggal_kembali)
-                                    && $pinjam->status == 'Dipinjam'
-                                ){
+                                    'pending' => '#F59E0B',
 
-                                    $statusText = 'Terlambat';
+                                    'dipinjam' => '#A56A3D',
 
-                                }
+                                    'terlambat' => '#DC2626',
 
-                                $bg = match($statusText) {
+                                    'ditolak' => '#DC2626',
 
-                                    'Pending' => '#F59E0B',
-
-                                    'Dipinjam' => '#A56A3D',
-
-                                    'Terlambat' => '#DC2626',
-
-                                    'Ditolak' => '#DC2626',
-
-                                    'Dikembalikan' => '#16A34A',
+                                    'dikembalikan' => '#16A34A',
 
                                     default => '#6B7280',
 
                                 };
-
                             @endphp
 
                             <tr
@@ -310,7 +320,7 @@
                                         class="d-flex justify-content-end align-items-center gap-2 flex-wrap"
                                     >
 
-                                        @if($pinjam->status == 'Pending')
+                                        @if($pinjam->status === 'pending')
 
                                             {{-- SETUJUI --}}
                                             <form
@@ -360,7 +370,7 @@
 
                                             </form>
 
-                                        @elseif($pinjam->status == 'Dipinjam')
+                                        @elseif($pinjam->status === 'dipinjam' || $pinjam->status === 'terlambat')
 
                                             {{-- KEMBALIKAN --}}
                                             <form

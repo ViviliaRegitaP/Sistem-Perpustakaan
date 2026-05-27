@@ -15,7 +15,13 @@ class FineController extends Controller
 
     public function adminIndex()
     {
-        // Ambil semua peminjaman, lalu filter "Terlambat" dengan logic dari tanggal_kembali
+        // Pastikan status "terlambat" tersinkron di DB (idempotent)
+        Peminjaman::query()
+            ->where('status', 'dipinjam')
+            ->where('tanggal_kembali', '<', now()->toDateString())
+            ->update(['status' => 'terlambat']);
+
+        // Ambil semua peminjaman terlambat (lowercase) untuk auto-create/auto-update denda
         $peminjamans = Peminjaman::with([
             'user',
             'buku',
@@ -23,13 +29,18 @@ class FineController extends Controller
         ])->get();
 
         $telatPeminjamans = $peminjamans->filter(function ($pinjam) {
-            return now()->gt($pinjam->tanggal_kembali) && $pinjam->status == 'Dipinjam';
+            return $pinjam->status === 'terlambat';
         })->values();
 
-        // Auto-create/auto-update denda untuk peminjaman yang terlambat
         foreach ($telatPeminjamans as $pinjam) {
-            $telat = now()->diffInDays($pinjam->tanggal_kembali);
-            $telat = max(0, $telat);
+            $hariTerlambat = max(
+                0,
+                floor(
+                    now()->diffInDays($pinjam->tanggal_kembali)
+                )
+            );
+
+            $telat = (int) $hariTerlambat;
             $jumlahDenda = $telat * 2000;
 
             if (!$pinjam->fine) {
@@ -41,28 +52,32 @@ class FineController extends Controller
                     'status' => 'UNPAID',
                 ]);
             } else {
-                // update jumlah denda & sisa bila belum lunas
                 $pinjam->fine->jumlah_denda = $jumlahDenda;
+
                 if ($pinjam->fine->status !== 'PAID') {
-                    $pinjam->fine->sisa_denda = max(0, $jumlahDenda - (int) $pinjam->fine->dibayar);
-                    if ($pinjam->fine->status === 'UNPAID' && $pinjam->fine->dibayar > 0) {
+                    $pinjam->fine->sisa_denda = max(
+                        0,
+                        $jumlahDenda - (int) $pinjam->fine->dibayar
+                    );
+
+                    if (
+                        $pinjam->fine->status === 'UNPAID'
+                        && (int) $pinjam->fine->dibayar > 0
+                    ) {
                         $pinjam->fine->status = 'PARTIALLY_PAID';
                     }
                 }
+
                 $pinjam->fine->save();
             }
         }
 
-        // Reload relasi fine setelah auto-create/update
+        // Reload supaya relasi fine terbaru terbaca
         $peminjamans = Peminjaman::with([
             'user',
             'buku',
             'fine'
         ])->get();
-
-        $telatPeminjamans = $peminjamans->filter(function ($pinjam) {
-            return now()->gt($pinjam->tanggal_kembali) && $pinjam->status == 'Dipinjam';
-        })->values();
 
         return view('admin.kelola-denda', compact('peminjamans'));
 
@@ -75,22 +90,32 @@ class FineController extends Controller
 
     public function userIndex()
     {
-        // Ambil semua peminjaman milik user login, lalu filter terlambat berdasarkan tanggal_kembali
+        // Pastikan status "terlambat" tersinkron di DB (idempotent)
+        Peminjaman::query()
+            ->where('status', 'dipinjam')
+            ->where('tanggal_kembali', '<', now()->toDateString())
+            ->update(['status' => 'terlambat']);
+
         $peminjamans = Peminjaman::with([
             'buku',
             'fine'
         ])
-        ->where('user_id', Auth::id())
-        ->get();
+            ->where('user_id', Auth::id())
+            ->get();
 
         $telatPeminjamans = $peminjamans->filter(function ($pinjam) {
-            return now()->gt($pinjam->tanggal_kembali) && $pinjam->status == 'Dipinjam';
+            return $pinjam->status === 'terlambat';
         })->values();
 
-        // Auto-create/auto-update denda untuk user yang terlambat
         foreach ($telatPeminjamans as $pinjam) {
-            $telat = now()->diffInDays($pinjam->tanggal_kembali);
-            $telat = max(0, $telat);
+            $hariTerlambat = max(
+                0,
+                floor(
+                    now()->diffInDays($pinjam->tanggal_kembali)
+                )
+            );
+
+            $telat = (int) $hariTerlambat;
             $jumlahDenda = $telat * 2000;
 
             if (!$pinjam->fine) {
@@ -103,23 +128,31 @@ class FineController extends Controller
                 ]);
             } else {
                 $pinjam->fine->jumlah_denda = $jumlahDenda;
+
                 if ($pinjam->fine->status !== 'PAID') {
-                    $pinjam->fine->sisa_denda = max(0, $jumlahDenda - (int) $pinjam->fine->dibayar);
-                    if ($pinjam->fine->status === 'UNPAID' && $pinjam->fine->dibayar > 0) {
+                    $pinjam->fine->sisa_denda = max(
+                        0,
+                        $jumlahDenda - (int) $pinjam->fine->dibayar
+                    );
+
+                    if (
+                        $pinjam->fine->status === 'UNPAID'
+                        && (int) $pinjam->fine->dibayar > 0
+                    ) {
                         $pinjam->fine->status = 'PARTIALLY_PAID';
                     }
                 }
+
                 $pinjam->fine->save();
             }
         }
 
-        // Reload supaya relasi fine terbaru kebaca
         $peminjamans = Peminjaman::with(['buku', 'fine'])
             ->where('user_id', Auth::id())
             ->get();
 
         $telatPeminjamans = $peminjamans->filter(function ($pinjam) {
-            return now()->gt($pinjam->tanggal_kembali) && $pinjam->status == 'Dipinjam';
+            return $pinjam->status === 'terlambat';
         })->values();
 
         return view('anggota.denda', compact('telatPeminjamans'));
@@ -238,3 +271,4 @@ class FineController extends Controller
             );
     }
 }
+

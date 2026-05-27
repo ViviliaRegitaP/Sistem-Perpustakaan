@@ -85,31 +85,22 @@
 
                         }
 
-                        $statusText = $pinjam->status;
+                        $statusText = match($pinjam->status) {
+                            'pending' => 'pending',
+                            'dipinjam' => 'dipinjam',
+                            'terlambat' => 'terlambat',
+                            'ditolak' => 'ditolak',
+                            'dikembalikan' => 'dikembalikan',
+                            default => $pinjam->status,
+                        };
 
-                        if(
-                            $hari < 0 &&
-                            $pinjam->status == 'Dipinjam'
-                        ){
-
-                            $statusText = 'Terlambat';
-
-                        }
-
-                        $bg = match($statusText) {
-
-                            'Pending' => '#6B7280',
-
-                            'Ditolak' => '#DC2626',
-
-                            'Dipinjam' => '#9B6B43',
-
-                            'Terlambat' => '#DC2626',
-
-                            'Dikembalikan' => '#16A34A',
-
+                        $bg = match($pinjam->status) {
+                            'pending' => '#6B7280',
+                            'ditolak' => '#DC2626',
+                            'dipinjam' => '#9B6B43',
+                            'terlambat' => '#DC2626',
+                            'dikembalikan' => '#16A34A',
                             default => '#16A34A',
-
                         };
 
                     @endphp
