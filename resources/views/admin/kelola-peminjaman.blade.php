@@ -210,11 +210,27 @@
 
                             @php
 
-                                $bg = match($pinjam->status) {
+                                $statusText = $pinjam->status;
+
+                                if(
+                                    now()->gt($pinjam->tanggal_kembali)
+                                    && $pinjam->status == 'Dipinjam'
+                                ){
+
+                                    $statusText = 'Terlambat';
+
+                                }
+
+                                $bg = match($statusText) {
 
                                     'Pending' => '#F59E0B',
+
                                     'Dipinjam' => '#A56A3D',
+
+                                    'Terlambat' => '#DC2626',
+
                                     'Ditolak' => '#DC2626',
+
                                     'Dikembalikan' => '#16A34A',
 
                                     default => '#6B7280',
@@ -279,7 +295,7 @@
                                         "
                                     >
 
-                                        {{ $pinjam->status }}
+                                        {{ $statusText }}
 
                                     </span>
 

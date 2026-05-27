@@ -4,7 +4,6 @@
 
 <div class="card border-0 data-card">
 
-    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -41,7 +40,6 @@
 
     </div>
 
-    {{-- TABLE --}}
     <div class="table-responsive">
 
         <table class="table align-middle custom-table">
@@ -87,18 +85,17 @@
 
                     @endphp
 
+
                     @if($telat > 0)
 
                         <tr>
 
-                            {{-- BUKU --}}
                             <td class="judul-buku">
 
                                 {{ $pinjam->buku->judul }}
 
                             </td>
 
-                            {{-- TERLAMBAT --}}
                             <td>
 
                                 <span class="text-danger fw-semibold">
@@ -109,7 +106,6 @@
 
                             </td>
 
-                            {{-- DENDA --}}
                             <td>
 
                                 <span class="text-danger fw-bold">
@@ -120,14 +116,11 @@
 
                             </td>
 
-                            {{-- STATUS --}}
                             <td class="text-center">
 
                                 <span
                                     class="badge rounded-pill status-badge"
-                                    style="
-                                        background:#DC2626;
-                                    "
+                                    style="background:#DC2626;"
                                 >
                                     Belum Bayar
                                 </span>
@@ -140,8 +133,6 @@
 
                 @endforeach
 
-
-                {{-- KOSONG --}}
                 @if(!$adaDenda)
 
                     <tr>
@@ -187,8 +178,6 @@
     padding:30px;
 }
 
-/* TABLE */
-
 .custom-table{
     margin-bottom:0;
 }
@@ -227,8 +216,6 @@
     padding:10px 18px;
     min-width:130px;
 }
-
-/* EMPTY */
 
 .empty-state{
     text-align:center;

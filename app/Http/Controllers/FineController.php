@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class FineController extends Controller
 {
@@ -18,9 +17,8 @@ class FineController extends Controller
             'user',
             'buku'
         ])
-        ->where('status', 'Dipinjam')
-        ->latest()
-        ->get();
+            ->whereDate('tanggal_kembali', '<', now())
+            ->get();
 
         return view(
             'admin.kelola-denda',
@@ -37,10 +35,9 @@ class FineController extends Controller
         $peminjamans = Peminjaman::with([
             'buku'
         ])
-        ->where('user_id', Auth::id())
-        ->where('status', 'Dipinjam')
-        ->latest()
-        ->get();
+            ->where('user_id', Auth::id())
+            ->whereDate('tanggal_kembali', '<', now())
+            ->get();
 
         return view(
             'anggota.denda',
@@ -48,3 +45,4 @@ class FineController extends Controller
         );
     }
 }
+
